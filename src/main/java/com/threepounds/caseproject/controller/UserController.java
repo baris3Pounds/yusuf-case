@@ -30,7 +30,7 @@ public class UserController {
         userService.getByUserId(userId)
                 .orElseThrow(()->new NotFoundException("User not found"));
 
-      return ResponseEntity.ok(userService.getUser(userId));
+      return ResponseEntity.ok(userService.getByUserId(userId));
     }
     @DeleteMapping("{userId}")
     public ResponseEntity deleteOneUser(@PathVariable UUID userId){

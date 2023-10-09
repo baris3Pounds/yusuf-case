@@ -21,10 +21,7 @@ public class UserService {
     public void deleteUser(UUID userId){
         userRepository.deleteById(userId);
     }
-    public User getUser(UUID userId){
 
-        return userRepository.getById(userId);
-    }
     public Optional<User> getByUserId(UUID userId){
         return userRepository.findById(userId);
     }

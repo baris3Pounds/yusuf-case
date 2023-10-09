@@ -65,5 +65,11 @@ public class CategoryController {
     categoryService.delete(id);
     return ResponseEntity.ok("success");
   }
+  @GetMapping("{id}")
+  public ResponseEntity getOneCategory(@PathVariable UUID id){
+    categoryService.getById(id)
+            .orElseThrow(()-> new NotFoundException("Category not found"));
+    return ResponseEntity.ok(categoryService.getById(id));
+  }
 
 }
