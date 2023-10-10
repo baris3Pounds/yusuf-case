@@ -27,10 +27,11 @@ public class UserController {
     }
     @GetMapping("{userId}")
     public ResponseEntity getOneUser(@PathVariable UUID userId){
-        userService.getByUserId(userId)
-                .orElseThrow(()->new NotFoundException("User not found"));
+        User user = userService.getByUserId(userId)
+            .orElseThrow(() -> new NotFoundException("User not found"));
 
-      return ResponseEntity.ok(userService.getByUserId(userId));
+      UserDto userDto = userMapper.userEntityToDto(user);
+      return ResponseEntity.ok(userDto);
     }
     @DeleteMapping("{userId}")
     public ResponseEntity deleteOneUser(@PathVariable UUID userId){

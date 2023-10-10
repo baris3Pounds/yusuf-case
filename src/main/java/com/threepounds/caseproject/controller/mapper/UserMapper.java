@@ -9,4 +9,5 @@ import javax.swing.text.html.parser.ContentModel;
 @Mapper(componentModel="spring")
 public interface UserMapper {
     User userDtoToEntity(UserDto userDto);
+    UserDto userEntityToDto(User entity);
 }
