@@ -67,9 +67,11 @@ public class CategoryController {
   }
   @GetMapping("{id}")
   public ResponseEntity getOneCategory(@PathVariable UUID id){
-    categoryService.getById(id)
+    Category category= categoryService.getById(id)
+
             .orElseThrow(()-> new NotFoundException("Category not found"));
-    return ResponseEntity.ok(categoryService.getById(id));
+   CategoryDto categoryDto=categoryMapper.CATEGORY_DTO(category);
+    return ResponseEntity.ok(categoryDto);
   }
 
 }

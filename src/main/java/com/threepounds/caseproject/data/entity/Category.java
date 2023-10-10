@@ -1,10 +1,8 @@
 package com.threepounds.caseproject.data.entity;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
 import java.util.UUID;
 
 @Entity(name = "category")
@@ -23,6 +21,17 @@ public class Category {
 
   @Column
   private boolean active;
+  @OneToOne
+  @JoinColumn(name = "category")
+  private Advert advert;
+
+  public Category(Advert advert) {
+    this.advert = advert;
+  }
+
+  public Category() {
+
+  }
 
   public UUID getId() {
     return id;
