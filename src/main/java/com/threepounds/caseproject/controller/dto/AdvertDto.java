@@ -10,6 +10,8 @@ import java.util.UUID;
 public class AdvertDto {
     private UUID id;
 
+    private UUID categoryId;
+
     private String title;
     private Date lastUpdated;
 
@@ -91,6 +93,12 @@ public class AdvertDto {
 
     private BigDecimal price;
 
+    public UUID getCategoryId() {
+        return categoryId;
+    }
 
+    public void setCategoryId(UUID categoryId) {
+        this.categoryId = categoryId;
+    }
 }
 

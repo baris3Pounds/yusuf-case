@@ -1,13 +1,11 @@
-package com.threepounds.caseproject.controller.dto;
+package com.threepounds.caseproject.controller.resource;
 
 import java.util.UUID;
 
-public class CategoryDto {
-
+public class CategoryResource {
   private UUID id;
   private String name;
   private String description;
-  private boolean active;
 
   public UUID getId() {
     return id;
@@ -31,13 +29,5 @@ public class CategoryDto {
 
   public void setDescription(String description) {
     this.description = description;
-  }
-
-  public boolean isActive() {
-    return active;
-  }
-
-  public void setActive(boolean active) {
-    this.active = active;
   }
 }

@@ -1,116 +1,124 @@
 package com.threepounds.caseproject.data.entity;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
+import java.time.ZonedDateTime;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
+
 @Entity(name = "advert")
 public class Advert {
-    @Id
-    @Column
-    @GeneratedValue
-    private UUID id;
-    @Column
-    private String title;
-    @Column
-    private String description;
-    @Column
-   private boolean active;
 
-    @Column
-    @UpdateTimestamp
-    @CreatedDate
-    @Temporal(TemporalType.DATE)
-    @JsonFormat(pattern="yyyy-MM-dd")
-    private Date date;
+  @Id
+  @Column
+  @GeneratedValue
+  private UUID id;
+  @Column
+  private String title;
+  @Column
+  private String description;
+  @Column
+  private boolean active;
 
-    public Date getLastUpdated() {
-        return lastUpdated;
-    }
+  @Column
+  @CreationTimestamp
+  private ZonedDateTime createdDate;
 
-    public void setLastUpdated(Date lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
+  public ZonedDateTime getLastUpdated() {
+    return lastUpdated;
+  }
 
-    @Column
-    @LastModifiedDate
-    @JsonFormat(pattern="yyyy-MM-dd")
-    @Temporal(TemporalType.DATE)
-    @UpdateTimestamp
-    private Date lastUpdated;
-    @Column
-    private BigDecimal price;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "category_id",referencedColumnName = "id")
-    private Category category;
-    public Advert(){
+  public void setLastUpdated(ZonedDateTime lastUpdated) {
+    this.lastUpdated = lastUpdated;
+  }
 
-    }
+  @Column
+  @UpdateTimestamp
+  private ZonedDateTime lastUpdated;
+  @Column
+  private BigDecimal price;
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "category_id", referencedColumnName = "id")
+  private Category category;
 
-    public UUID getId() {
-        return id;
-    }
+  public void setCreatedDate(ZonedDateTime createdDate) {
+    this.createdDate = createdDate;
+  }
 
-    public Advert(UUID id, String title, String description, boolean active, Date date, BigDecimal price) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.active = active;
-        this.date = date;
-        this.price = price;
-    }
+  public Category getCategory() {
+    return category;
+  }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+  public void setCategory(Category category) {
+    this.category = category;
+  }
 
-    public String getTitle() {
-        return title;
-    }
+  public Advert() {
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public UUID getId() {
+    return id;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public Advert(UUID id, String title, String description, boolean active,
+      ZonedDateTime createdDate, BigDecimal price) {
+    this.id = id;
+    this.title = title;
+    this.description = description;
+    this.active = active;
+    this.createdDate = createdDate;
+    this.price = price;
+  }
 
-    public boolean isActive() {
-        return active;
-    }
+  public void setId(UUID id) {
+    this.id = id;
+  }
 
-    public void setActive(boolean active) {
-        this.active = active;
-    }
+  public String getTitle() {
+    return title;
+  }
 
-    public Date getDate() {
-        return date;
-    }
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public BigDecimal getPrice() {
-        return price;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
+  public boolean isActive() {
+    return active;
+  }
+
+  public void setActive(boolean active) {
+    this.active = active;
+  }
+
+  public ZonedDateTime getCreatedDate() {
+    return createdDate;
+  }
+
+  public BigDecimal getPrice() {
+    return price;
+  }
+
+  public void setPrice(BigDecimal price) {
+    this.price = price;
+  }
 
 
 }

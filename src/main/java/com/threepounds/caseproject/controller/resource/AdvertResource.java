@@ -1,36 +1,18 @@
-package com.threepounds.caseproject.data.entity;
+package com.threepounds.caseproject.controller.resource;
 
-
-import jakarta.persistence.*;
-
+import com.threepounds.caseproject.data.entity.Category;
 import java.util.UUID;
 
-@Entity(name = "category")
-public class Category {
-
-  @Id
-  @GeneratedValue
-  @Column
+public class AdvertResource {
   private UUID id;
 
-  @Column
-  private String name;
+  private String title;
 
-  @Column
   private String description;
 
-  @Column
   private boolean active;
-  @OneToOne(mappedBy = "category")
-  private Advert advert;
 
-  public Category(Advert advert) {
-    this.advert = advert;
-  }
-
-  public Category() {
-
-  }
+  private CategoryResource category;
 
   public UUID getId() {
     return id;
@@ -40,12 +22,12 @@ public class Category {
     this.id = id;
   }
 
-  public String getName() {
-    return name;
+  public String getTitle() {
+    return title;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   public String getDescription() {
@@ -62,5 +44,13 @@ public class Category {
 
   public void setActive(boolean active) {
     this.active = active;
+  }
+
+  public CategoryResource getCategory() {
+    return category;
+  }
+
+  public void setCategory(CategoryResource category) {
+    this.category = category;
   }
 }
