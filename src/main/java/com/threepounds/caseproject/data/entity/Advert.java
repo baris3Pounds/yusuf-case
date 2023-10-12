@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity(name = "advert")
-
+@Data
 public class Advert {
 
   @Id

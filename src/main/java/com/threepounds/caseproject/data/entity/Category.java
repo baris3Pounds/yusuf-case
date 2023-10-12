@@ -1,6 +1,7 @@
 package com.threepounds.caseproject.data.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 
 import java.util.UUID;
 
+@Data
 @Entity(name = "category")
 public class Category {
 
@@ -25,6 +27,7 @@ public class Category {
 
   @Column
   private boolean active;
+
   @OneToOne(mappedBy = "category")
   private Advert advert;
 
@@ -44,43 +47,4 @@ public class Category {
     this.advert = advert;
   }
 
-  public UUID getId() {
-    return id;
-  }
-
-  public void setId(UUID id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  public boolean isActive() {
-    return active;
-  }
-
-  public void setActive(boolean active) {
-    this.active = active;
-  }
-
-  public Advert getAdvert() {
-    return advert;
-  }
-
-  public void setAdvert(Advert advert) {
-    this.advert = advert;
-  }
 }

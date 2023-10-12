@@ -34,8 +34,10 @@ public class CategoryController {
 
 
   @GetMapping("")
-  public ResponseEntity<List<Category>> list(){
-    return ResponseEntity.ok(categoryService.list());
+  public ResponseEntity<List<CategoryResource>> list(){
+    List<CategoryResource> categoryResources = categoryMapper.categoryDtoList(
+        categoryService.list());
+    return ResponseEntity.ok(categoryResources);
   }
 
   @PostMapping("")
