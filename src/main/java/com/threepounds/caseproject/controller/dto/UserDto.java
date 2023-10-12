@@ -1,6 +1,8 @@
 package com.threepounds.caseproject.controller.dto;
 
 import jakarta.persistence.Column;
+import lombok.Data;
+
 import java.util.UUID;
 
 public class UserDto {
@@ -12,6 +14,16 @@ public class UserDto {
 
     private String email;
     private boolean userActive;
+public UserDto() {
+
+}
+    public UserDto(UUID userID, String userName, String name, String email, boolean userActive) {
+        this.userID = userID;
+        this.userName = userName;
+        this.name = name;
+        this.email = email;
+        this.userActive = userActive;
+    }
 
     public UUID getUserID() {
         return userID;
@@ -19,14 +31,6 @@ public class UserDto {
 
     public void setUserID(UUID userID) {
         this.userID = userID;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getUserName() {
@@ -45,12 +49,12 @@ public class UserDto {
         this.name = name;
     }
 
-    public String getEMail() {
+    public String getEmail() {
         return email;
     }
 
-    public void setEMail(String eMail) {
-        this.email = eMail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public boolean isUserActive() {
@@ -60,7 +64,4 @@ public class UserDto {
     public void setUserActive(boolean userActive) {
         this.userActive = userActive;
     }
-
-
-
 }

@@ -5,6 +5,7 @@ import com.threepounds.caseproject.controller.resource.AdvertResource;
 import com.threepounds.caseproject.data.entity.Advert;
 import com.threepounds.caseproject.data.entity.Category;
 import com.threepounds.caseproject.exceptions.NotFoundException;
+import com.threepounds.caseproject.exceptions.RestResponseEntityExceptionHandler;
 import com.threepounds.caseproject.service.AdvertService;
 import com.threepounds.caseproject.service.CategoryService;
 import java.util.List;
@@ -40,7 +41,7 @@ public class AdvertController {
     public ResponseEntity<Advert> createAdvert(@RequestBody AdvertDto advertDto){
         Advert advertToSave= advertMapper.advertDtoToEntity(advertDto);
         Category category = categoryService.getById(advertDto.getCategoryId())
-            .orElseThrow(()-> new NotFoundException("Category not found"));
+            .orElseThrow(()-> new IllegalArgumentException());
         advertToSave.setCategory(category);
         Advert savedAdvert=advertService.save(advertToSave);
 
@@ -55,7 +56,7 @@ public class AdvertController {
     @GetMapping("{id}")
     public ResponseEntity getOneAdvert(@PathVariable UUID id){
        Advert advert= advertService.getById(id)
-                .orElseThrow(()-> new RuntimeException("Advert not found"));
+                .orElseThrow(()-> new IllegalArgumentException() );
         AdvertResource advertResource = advertMapper.entityToAdvertResource(advert);
         return ResponseEntity.ok(advertResource);
     }
@@ -72,5 +73,6 @@ public class AdvertController {
     public ResponseEntity<List<Advert>> list(){
         return ResponseEntity.ok(advertService.getAllAdvert());
     }
+
 
  }

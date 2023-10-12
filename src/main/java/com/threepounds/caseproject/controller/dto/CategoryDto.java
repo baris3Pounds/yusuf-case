@@ -1,5 +1,7 @@
 package com.threepounds.caseproject.controller.dto;
 
+import lombok.Data;
+
 import java.util.UUID;
 
 public class CategoryDto {
@@ -35,6 +37,13 @@ public class CategoryDto {
 
   public boolean isActive() {
     return active;
+  }
+
+  public CategoryDto(UUID id, String name, String description, boolean active) {
+    this.id = id;
+    this.name = name;
+    this.description = description;
+    this.active = active;
   }
 
   public void setActive(boolean active) {

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.time.ZonedDateTime;
+
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -16,6 +18,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity(name = "advert")
+
 public class Advert {
 
   @Id
@@ -28,24 +31,17 @@ public class Advert {
   private String description;
   @Column
   private boolean active;
-
   @Column
   @CreationTimestamp
   private ZonedDateTime createdDate;
 
-  public ZonedDateTime getLastUpdated() {
-    return lastUpdated;
-  }
-
-  public void setLastUpdated(ZonedDateTime lastUpdated) {
-    this.lastUpdated = lastUpdated;
-  }
-
   @Column
   @UpdateTimestamp
   private ZonedDateTime lastUpdated;
+
   @Column
   private BigDecimal price;
+
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "category_id", referencedColumnName = "id")
   private Category category;
@@ -62,22 +58,10 @@ public class Advert {
     this.category = category;
   }
 
-  public Advert() {
 
-  }
 
   public UUID getId() {
     return id;
-  }
-
-  public Advert(UUID id, String title, String description, boolean active,
-      ZonedDateTime createdDate, BigDecimal price) {
-    this.id = id;
-    this.title = title;
-    this.description = description;
-    this.active = active;
-    this.createdDate = createdDate;
-    this.price = price;
   }
 
   public void setId(UUID id) {
@@ -112,6 +96,14 @@ public class Advert {
     return createdDate;
   }
 
+  public ZonedDateTime getLastUpdated() {
+    return lastUpdated;
+  }
+
+  public void setLastUpdated(ZonedDateTime lastUpdated) {
+    this.lastUpdated = lastUpdated;
+  }
+
   public BigDecimal getPrice() {
     return price;
   }
@@ -119,6 +111,24 @@ public class Advert {
   public void setPrice(BigDecimal price) {
     this.price = price;
   }
+
+  public Advert() {
+
+  }
+
+
+
+  public Advert(UUID id, String title, String description, boolean active,
+      ZonedDateTime createdDate, BigDecimal price) {
+    this.id = id;
+    this.title = title;
+    this.description = description;
+    this.active = active;
+    this.createdDate = createdDate;
+    this.price = price;
+  }
+
+
 
 
 }

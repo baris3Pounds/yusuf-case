@@ -1,12 +1,10 @@
 package com.threepounds.caseproject.controller.dto;
-
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
-
+@Data
 public class AdvertDto {
     private UUID id;
 
@@ -15,38 +13,16 @@ public class AdvertDto {
     private String title;
     private Date lastUpdated;
 
-    public Date getLastUpdated() {
-        return lastUpdated;
-    }
-
-    public void setLastUpdated(Date lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
-
-    private String description;
-
-    private boolean active;
-
-    private Date date;
-    public AdvertDto(){
-
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public AdvertDto(UUID id, String title, String description, boolean active, Date date, BigDecimal price) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.active = active;
-        this.date = date;
-        this.price = price;
-    }
-
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public UUID getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(UUID categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getTitle() {
@@ -55,6 +31,14 @@ public class AdvertDto {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
     public String getDescription() {
@@ -73,7 +57,6 @@ public class AdvertDto {
         this.active = active;
     }
 
-
     public Date getDate() {
         return date;
     }
@@ -90,15 +73,34 @@ public class AdvertDto {
         this.price = price;
     }
 
+    private String description;
 
+    private boolean active;
+
+    private Date date;
     private BigDecimal price;
 
-    public UUID getCategoryId() {
-        return categoryId;
+    public AdvertDto() {
+
     }
 
-    public void setCategoryId(UUID categoryId) {
-        this.categoryId = categoryId;
+    public UUID getId() {
+        return id;
+    }
+
+    public AdvertDto(UUID id, String title, String description, boolean active, Date date, BigDecimal price) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.active = active;
+        this.date = date;
+        this.price = price;
     }
 }
+
+
+
+
+
+
 
