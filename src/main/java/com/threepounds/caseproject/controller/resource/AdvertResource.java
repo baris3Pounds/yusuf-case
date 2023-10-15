@@ -4,7 +4,7 @@ import com.threepounds.caseproject.data.entity.Category;
 import lombok.Data;
 
 import java.util.UUID;
-
+@Data
 public class AdvertResource {
   private UUID id;
 
@@ -20,45 +20,7 @@ public class AdvertResource {
 
   }
 
-  public UUID getId() {
-    return id;
-  }
 
-  public void setId(UUID id) {
-    this.id = id;
-  }
-
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  public boolean isActive() {
-    return active;
-  }
-
-  public void setActive(boolean active) {
-    this.active = active;
-  }
-
-  public CategoryResource getCategory() {
-    return category;
-  }
-
-  public void setCategory(CategoryResource category) {
-    this.category = category;
-  }
 
   public AdvertResource(UUID id, String title, String description, boolean active, CategoryResource category) {
     this.id = id;

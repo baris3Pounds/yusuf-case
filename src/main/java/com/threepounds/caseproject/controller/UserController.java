@@ -2,7 +2,6 @@ package com.threepounds.caseproject.controller;
 import com.threepounds.caseproject.controller.dto.UserDto;
 import com.threepounds.caseproject.controller.mapper.UserMapper;
 import com.threepounds.caseproject.data.entity.User;
-import com.threepounds.caseproject.exceptions.NotFoundException;
 import com.threepounds.caseproject.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +27,7 @@ public class UserController {
     @GetMapping("{userId}")
     public ResponseEntity getOneUser(@PathVariable UUID userId){
         User user = userService.getByUserId(userId)
-            .orElseThrow(() -> new NotFoundException("User not found"));
+            .orElseThrow(() -> new RuntimeException());
 
       UserDto userDto = userMapper.userEntityToDto(user);
       return ResponseEntity.ok(userDto);
@@ -41,7 +40,7 @@ public class UserController {
     @PutMapping("{userId}")
             public ResponseEntity updateOneUser(@PathVariable UUID userId,@RequestBody UserDto userDto){
         User existingUser=userService.getByUserIdToUpdate(userId)
-                .orElseThrow(()->new NotFoundException("User not found"));
+                .orElseThrow(()->new RuntimeException());
         User mappedUser=userMapper.userDtoToEntity(userDto);
         mappedUser.setUserID(existingUser.getUserID());
         User updateUser=userService.saveUser(mappedUser);

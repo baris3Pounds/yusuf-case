@@ -5,7 +5,6 @@ import com.threepounds.caseproject.controller.dto.CategoryDto;
 import com.threepounds.caseproject.controller.mapper.CategoryMapper;
 import com.threepounds.caseproject.controller.resource.CategoryResource;
 import com.threepounds.caseproject.data.entity.Category;
-import com.threepounds.caseproject.exceptions.NotFoundException;
 import com.threepounds.caseproject.service.CategoryService;
 import java.util.List;
 import java.util.UUID;
@@ -54,8 +53,7 @@ public class CategoryController {
   @PutMapping("{id}")
   public ResponseEntity update(@PathVariable UUID id, @RequestBody CategoryDto dto){
     Category existingCategory = categoryService.getById(id)
-        .orElseThrow(() -> new NotFoundException("Category not found"));
-
+        .orElseThrow(() -> new RuntimeException());
     Category mappedCategory = categoryMapper.dtoToEntity(dto);
     mappedCategory.setId(existingCategory.getId());
     Category updatedCategory = categoryService.save(mappedCategory);
@@ -71,7 +69,7 @@ public class CategoryController {
   public ResponseEntity getOneCategory(@PathVariable UUID id){
     Category category= categoryService.getById(id)
 
-            .orElseThrow(()-> new NotFoundException("Category not found"));
+            .orElseThrow(()-> new RuntimeException());
    CategoryResource categoryResource=categoryMapper.categoryDto(category);
     return ResponseEntity.ok(categoryResource);
   }

@@ -7,51 +7,13 @@ import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.lang.NonNull;
 
 import java.util.UUID;
-
+@Data
 @Entity(name = "users")
 public class User {
     public User(){
 
     }
-    public UUID getUserID() {
-        return userID;
-    }
 
-    public void setUserID(UUID userID) {
-        this.userID = userID;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public boolean isUserActive() {
-        return userActive;
-    }
-
-    public void setUserActive(boolean userActive) {
-        this.userActive = userActive;
-    }
 
     @Id
     @GeneratedValue

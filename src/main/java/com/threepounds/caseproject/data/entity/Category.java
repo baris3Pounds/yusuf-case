@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -30,6 +32,8 @@ public class Category {
 
   @OneToOne(mappedBy = "category")
   private Advert advert;
+  @OneToMany(mappedBy = "category")
+  private List<Features> features;
 
   public Category(Advert advert) {
     this.advert = advert;

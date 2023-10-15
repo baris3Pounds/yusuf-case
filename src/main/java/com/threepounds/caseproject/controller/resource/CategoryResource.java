@@ -12,6 +12,7 @@ public class CategoryResource {
   private String description;
 
   private AdvertResource advert;
+  private FeaturesResource features;
 
   public CategoryResource( ) {
 

@@ -13,8 +13,10 @@ public interface CategoryMapper {
     Category dtoToEntity(CategoryDto dto);
 
     @Mapping(source = "advert" , target = "advert", ignore = true)
+    @Mapping(source = "features" , target = "features", ignore = true)
     CategoryResource categoryDto(Category category);
 
     @Mapping(source = "advert" , target = "advert", ignore = true)
+    @Mapping(source = "features" , target = "features", ignore = true)
     List<CategoryResource> categoryDtoList(List<Category> category);
 }

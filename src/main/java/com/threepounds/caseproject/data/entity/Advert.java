@@ -46,71 +46,7 @@ public class Advert {
   @JoinColumn(name = "category_id", referencedColumnName = "id")
   private Category category;
 
-  public void setCreatedDate(ZonedDateTime createdDate) {
-    this.createdDate = createdDate;
-  }
 
-  public Category getCategory() {
-    return category;
-  }
-
-  public void setCategory(Category category) {
-    this.category = category;
-  }
-
-
-
-  public UUID getId() {
-    return id;
-  }
-
-  public void setId(UUID id) {
-    this.id = id;
-  }
-
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  public boolean isActive() {
-    return active;
-  }
-
-  public void setActive(boolean active) {
-    this.active = active;
-  }
-
-  public ZonedDateTime getCreatedDate() {
-    return createdDate;
-  }
-
-  public ZonedDateTime getLastUpdated() {
-    return lastUpdated;
-  }
-
-  public void setLastUpdated(ZonedDateTime lastUpdated) {
-    this.lastUpdated = lastUpdated;
-  }
-
-  public BigDecimal getPrice() {
-    return price;
-  }
-
-  public void setPrice(BigDecimal price) {
-    this.price = price;
-  }
 
   public Advert() {
 

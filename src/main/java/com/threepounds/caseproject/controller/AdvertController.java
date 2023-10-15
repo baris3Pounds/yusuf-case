@@ -1,11 +1,10 @@
-package com.threepounds.caseproject.controller.mapper;
+package com.threepounds.caseproject.controller;
 
 import com.threepounds.caseproject.controller.dto.AdvertDto;
+import com.threepounds.caseproject.controller.mapper.AdvertMapper;
 import com.threepounds.caseproject.controller.resource.AdvertResource;
 import com.threepounds.caseproject.data.entity.Advert;
 import com.threepounds.caseproject.data.entity.Category;
-import com.threepounds.caseproject.exceptions.NotFoundException;
-import com.threepounds.caseproject.exceptions.RestResponseEntityExceptionHandler;
 import com.threepounds.caseproject.service.AdvertService;
 import com.threepounds.caseproject.service.CategoryService;
 import java.util.List;
@@ -63,7 +62,7 @@ public class AdvertController {
     @PutMapping("{id}")
     public ResponseEntity update(@PathVariable UUID id,@RequestBody AdvertDto advertDto){
         Advert existingAdvert=advertService.getById(id)
-                .orElseThrow(()->new NotFoundException("Advert not found"));
+                .orElseThrow(()->new RuntimeException());
         Advert mappedAdvert=advertMapper.advertDtoToEntity(advertDto);
         mappedAdvert.setId(existingAdvert.getId());
         Advert updateAdvert=advertService.save(mappedAdvert);
