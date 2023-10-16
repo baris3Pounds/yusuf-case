@@ -42,8 +42,8 @@ public class Advert {
   @Column
   private BigDecimal price;
 
-  @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "category_id", referencedColumnName = "id")
+  @ManyToOne
+  @JoinColumn(name = "category_id",referencedColumnName = "id")
   private Category category;
 
 

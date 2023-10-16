@@ -29,20 +29,17 @@ public class Category {
   @Column
   private boolean active;
 
-  @OneToOne(mappedBy = "category")
-  private Advert advert;
+  @OneToMany(mappedBy = "category")
+  private List<Advert> advert;
   @OneToMany(mappedBy = "category")
   private List<Features> features;
 
-  public Category(Advert advert) {
-    this.advert = advert;
-  }
 
   public Category() {
 
   }
 
-  public Category(UUID id, String name, String description, boolean active, Advert advert) {
+  public Category(UUID id, String name, String description, boolean active, List<Advert> advert) {
     this.id = id;
     this.name = name;
     this.description = description;
