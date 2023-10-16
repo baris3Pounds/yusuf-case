@@ -28,13 +28,14 @@ public class FeaturesController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Features> create(@RequestBody FeaturesDto featuresDto){
+    public ResponseEntity<FeaturesResource> create(@RequestBody FeaturesDto featuresDto){
         Features featuresToSave=featuresMapper.dtoToEntity(featuresDto);
         Category category= categoryService.getById(featuresDto.getCategoryId())
                 .orElseThrow(()->new IllegalArgumentException());
         featuresToSave.setCategory(category);
         Features savedFeature =featuresService.save(featuresToSave);
-        return ResponseEntity.ok(savedFeature);
+        FeaturesResource featuresResource = featuresMapper.featureToResource(savedFeature);
+        return ResponseEntity.ok(featuresResource);
 
     }
     @DeleteMapping("{id}")
@@ -56,12 +57,14 @@ public class FeaturesController {
     public ResponseEntity getOneFeature(@PathVariable UUID id){
         Features features=featuresService.getById(id)
                 .orElseThrow(()->new RuntimeException());
-        FeaturesResource featuresResource=featuresMapper.featureDto(features);
+        FeaturesResource featuresResource=featuresMapper.featureToResource(features);
         return ResponseEntity.ok(featuresResource);
     }
     @GetMapping("")
-    public ResponseEntity<List<Features>> list(){
-        return ResponseEntity.ok(featuresService.getAllFeatures());
+    public ResponseEntity<List<FeaturesResource>> list(){
+        List<FeaturesResource> featuresResources = featuresMapper.featuresToResourceList(
+            featuresService.getAllFeatures());
+        return ResponseEntity.ok(featuresResources);
     }
 
 
