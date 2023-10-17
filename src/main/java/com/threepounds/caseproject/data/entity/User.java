@@ -29,7 +29,7 @@ public class User {
     @Column
     private boolean userActive;
 
-
+    // TODO OneToMany 1 user 1 den fazla roles olabilir
 
 
 }
