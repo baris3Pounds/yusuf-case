@@ -1,15 +1,14 @@
 package com.threepounds.caseproject.data.entity;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.List;
 import java.util.UUID;
 import lombok.Data;
 
 @Data
-@Entity(name = "users")
+@Entity(name = "roles")
 public class Role {
   @Id
   @GeneratedValue
@@ -21,6 +20,11 @@ public class Role {
 
   @Column
   private String displayName;
+  @OneToMany(mappedBy = "role")
+  private List<Permission> permissions;
+  @ManyToOne
+  @JoinColumn(name = "user_id",referencedColumnName = "id")
+  private User user;
 
   // TODO ManyToOne  1 den fazla role 1 user a ait olabilir
 

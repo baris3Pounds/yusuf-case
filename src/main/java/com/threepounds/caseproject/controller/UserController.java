@@ -1,10 +1,14 @@
 package com.threepounds.caseproject.controller;
 import com.threepounds.caseproject.controller.dto.UserDto;
 import com.threepounds.caseproject.controller.mapper.UserMapper;
+import com.threepounds.caseproject.controller.resource.CategoryResource;
+import com.threepounds.caseproject.controller.resource.UserResource;
 import com.threepounds.caseproject.data.entity.User;
 import com.threepounds.caseproject.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -19,18 +23,19 @@ public class UserController {
     }
 
     @PostMapping("")
-    public ResponseEntity<User>  createUser(@RequestBody UserDto userDto){
+    public ResponseEntity<UserResource>  createUser(@RequestBody UserDto userDto){
         User userToSave=userMapper.userDtoToEntity(userDto);
         User savedUser=userService.saveUser(userToSave);
-        return ResponseEntity.ok(savedUser);
-    }
-    @GetMapping("{userId}")
-    public ResponseEntity getOneUser(@PathVariable UUID userId){
-        User user = userService.getByUserId(userId)
-            .orElseThrow(() -> new RuntimeException());
+       UserResource userResource=userMapper.userDto(savedUser);
 
-      UserDto userDto = userMapper.userEntityToDto(user);
-      return ResponseEntity.ok(userDto);
+        return ResponseEntity.ok(userResource);
+    }
+    @GetMapping("{id}")
+    public ResponseEntity getOneUser(@PathVariable UUID id){
+        User user = userService.getByUserId(id)
+            .orElseThrow(() -> new RuntimeException());
+           UserResource userResource= userMapper.userDto(user);
+      return ResponseEntity.ok(userResource);
     }
     @DeleteMapping("{userId}")
     public ResponseEntity deleteOneUser(@PathVariable UUID userId){
@@ -39,12 +44,19 @@ public class UserController {
     }
     @PutMapping("{userId}")
             public ResponseEntity updateOneUser(@PathVariable UUID userId,@RequestBody UserDto userDto){
-        User existingUser=userService.getByUserIdToUpdate(userId)
+        User existingUser=userService.getByUserId(userId)
                 .orElseThrow(()->new RuntimeException());
         User mappedUser=userMapper.userDtoToEntity(userDto);
-        mappedUser.setUserID(existingUser.getUserID());
+        mappedUser.setId(existingUser.getId());
         User updateUser=userService.saveUser(mappedUser);
+        userMapper.userDto(mappedUser);
         return ResponseEntity.ok(updateUser);
+    }
+    @GetMapping("")
+    public ResponseEntity<List<UserResource>> list(){
+        List<UserResource> userResources = userMapper.userDtoToList(
+                userService.list());
+        return ResponseEntity.ok(userResources);
     }
 
 

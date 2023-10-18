@@ -1,5 +1,6 @@
 package com.threepounds.caseproject.service;
 
+import com.threepounds.caseproject.data.entity.Category;
 import com.threepounds.caseproject.data.entity.User;
 import com.threepounds.caseproject.data.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class UserService {
     public Optional<User> getByUserId(UUID userId){
         return userRepository.findById(userId);
     }
-    public Optional<User> getByUserIdToUpdate(UUID userId){
-        return userRepository.findById(userId);
+    public List<User> list(){
+        return userRepository.findAll();
     }
 }

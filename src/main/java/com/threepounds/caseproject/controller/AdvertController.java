@@ -37,14 +37,14 @@ public class AdvertController {
         this.categoryService = categoryService;
     }
     @PostMapping("")
-    public ResponseEntity<Advert> createAdvert(@RequestBody AdvertDto advertDto){
+    public ResponseEntity<AdvertResource> createAdvert(@RequestBody AdvertDto advertDto){
         Advert advertToSave= advertMapper.advertDtoToEntity(advertDto);
         Category category = categoryService.getById(advertDto.getCategoryId())
             .orElseThrow(()-> new IllegalArgumentException());
         advertToSave.setCategory(category);
         Advert savedAdvert=advertService.save(advertToSave);
-
-        return ResponseEntity.ok(savedAdvert);
+        AdvertResource advertResource=advertMapper.entityToAdvertResource(savedAdvert);
+        return ResponseEntity.ok(advertResource);
 
     }
     @DeleteMapping("{id}")
@@ -65,12 +65,14 @@ public class AdvertController {
                 .orElseThrow(()->new RuntimeException());
         Advert mappedAdvert=advertMapper.advertDtoToEntity(advertDto);
         mappedAdvert.setId(existingAdvert.getId());
+        advertMapper.entityToAdvertResource(mappedAdvert);
         Advert updateAdvert=advertService.save(mappedAdvert);
         return ResponseEntity.ok(updateAdvert);
     }
     @GetMapping("")
-    public ResponseEntity<List<Advert>> list(){
-        return ResponseEntity.ok(advertService.getAllAdvert());
+    public ResponseEntity<List<AdvertResource>> list(){
+        List<AdvertResource> advertResource=advertMapper.entityToAdvertResource(advertService.getAllAdvert());
+        return ResponseEntity.ok(advertResource);
     }
 
 

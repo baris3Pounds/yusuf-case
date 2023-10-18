@@ -7,7 +7,7 @@ import java.util.UUID;
 @Data
 public class UserDto {
 
-    private UUID userID;
+    private UUID userId;
     private String userName;
 
     private String name;
@@ -17,8 +17,8 @@ public class UserDto {
 public UserDto() {
 
 }
-    public UserDto(UUID userID, String userName, String name, String email, boolean userActive) {
-        this.userID = userID;
+    public UserDto(UUID userId, String userName, String name, String email, boolean userActive) {
+        this.userId = userId;
         this.userName = userName;
         this.name = name;
         this.email = email;

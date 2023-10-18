@@ -40,10 +40,11 @@ public class CategoryController {
   }
 
   @PostMapping("")
-  public ResponseEntity<Category> create(@RequestBody CategoryDto categoryDto){
+  public ResponseEntity<CategoryResource> create(@RequestBody CategoryDto categoryDto){
     Category categoryToSave = categoryMapper.dtoToEntity(categoryDto);
     Category savedCategory = categoryService.save(categoryToSave);
-    return ResponseEntity.ok(savedCategory);
+    CategoryResource categoryResource=categoryMapper.categoryDto(savedCategory);
+    return ResponseEntity.ok(categoryResource);
   }
 
   // TODO PutMapping mevcut kategoriyi güncellemeli
@@ -57,6 +58,7 @@ public class CategoryController {
     Category mappedCategory = categoryMapper.dtoToEntity(dto);
     mappedCategory.setId(existingCategory.getId());
     Category updatedCategory = categoryService.save(mappedCategory);
+    categoryMapper.categoryDto(mappedCategory);
     return ResponseEntity.ok(updatedCategory);
   }
 
