@@ -28,4 +28,7 @@ public class PermissionService {
         return permissionsRepository.findById(id);
     }
 
+    public List<Permission> list(List<UUID> permissions){
+        return permissionsRepository.findAllById(permissions);
+    }
 }

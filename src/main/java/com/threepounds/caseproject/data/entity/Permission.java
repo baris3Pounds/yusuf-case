@@ -3,6 +3,7 @@ package com.threepounds.caseproject.data.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.UUID;
 import lombok.Data;
 
@@ -19,9 +20,8 @@ public class Permission {
 
   @Column
   private String displayName;
-  @ManyToOne
-  @JoinColumn(name = "role_id", referencedColumnName = "id")
-  private Role role;
+  @ManyToMany(fetch = FetchType.LAZY,mappedBy = "permissions")
+  private List<Role> roles;
 
 
   // TODO ManyToOne  1 den fazla permissions 1 role ait olabilir

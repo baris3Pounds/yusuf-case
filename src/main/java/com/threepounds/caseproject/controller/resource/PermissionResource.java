@@ -4,6 +4,8 @@ import lombok.Data;
 
 @Data
 public class PermissionResource {
+
+    private String id;
     private String name;
     private String displayName;
 

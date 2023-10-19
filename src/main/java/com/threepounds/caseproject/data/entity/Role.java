@@ -20,7 +20,11 @@ public class Role {
 
   @Column
   private String displayName;
-  @OneToMany(mappedBy = "role")
+  @ManyToMany
+  @JoinTable(
+      name = "role_permissions",
+      joinColumns = @JoinColumn(name = "role_id"),
+      inverseJoinColumns = @JoinColumn(name = "permission_id"))
   private List<Permission> permissions;
   @ManyToOne
   @JoinColumn(name = "user_id",referencedColumnName = "id")

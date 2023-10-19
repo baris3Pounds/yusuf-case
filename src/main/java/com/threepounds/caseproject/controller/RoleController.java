@@ -3,8 +3,9 @@ package com.threepounds.caseproject.controller;
 import com.threepounds.caseproject.controller.dto.RoleDto;
 import com.threepounds.caseproject.controller.mapper.RoleMapper;
 import com.threepounds.caseproject.controller.resource.RoleResource;
+import com.threepounds.caseproject.data.entity.Permission;
 import com.threepounds.caseproject.data.entity.Role;
-import com.threepounds.caseproject.data.entity.User;
+import com.threepounds.caseproject.service.PermissionService;
 import com.threepounds.caseproject.service.RoleService;
 import com.threepounds.caseproject.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -18,20 +19,21 @@ import java.util.UUID;
 public class RoleController {
     private final RoleService roleService;
     private final RoleMapper roleMapper;
-    private final UserService userService;
 
-    public RoleController(RoleService roleService, RoleMapper roleMapper, UserService userService) {
+    private final PermissionService permissionService;
+
+    public RoleController(RoleService roleService, RoleMapper roleMapper, UserService userService,
+        PermissionService permissionService) {
         this.roleService = roleService;
         this.roleMapper = roleMapper;
-        this.userService = userService;
+        this.permissionService = permissionService;
     }
 
     @PostMapping("")
     public ResponseEntity<RoleResource> create(@RequestBody RoleDto roleDto){
         Role roleToSave=roleMapper.dtoToEntity(roleDto);
-        User user=userService.getByUserId(roleDto.getUserId())
-                .orElseThrow(()->new RuntimeException());
-        roleToSave.setUser(user);
+        List<Permission> permissions = permissionService.list(roleDto.getPermissions());
+        roleToSave.setPermissions(permissions);
         Role savedRole=roleService.save(roleToSave);
         RoleResource roleResource=roleMapper.roleDto(savedRole);
         return ResponseEntity.ok(roleResource);
@@ -41,10 +43,12 @@ public class RoleController {
         Role existingRole=roleService.getById(id)
                 .orElseThrow(()->new RuntimeException());
         Role mappedRole=roleMapper.dtoToEntity(roleDto);
+        List<Permission> permissions = permissionService.list(roleDto.getPermissions());
+        mappedRole.setPermissions(permissions);
         mappedRole.setId(existingRole.getId());
         Role updateRole=roleService.save(mappedRole);
-        roleMapper.roleDto(mappedRole);
-        return ResponseEntity.ok(updateRole);
+        RoleResource roleResource = roleMapper.roleDto(updateRole);
+        return ResponseEntity.ok(roleResource);
     }
     @DeleteMapping("{id}")
     public ResponseEntity delete(@PathVariable UUID id){

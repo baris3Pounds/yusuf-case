@@ -1,21 +1,19 @@
 package com.threepounds.caseproject.controller.dto;
 
+import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.UUID;
+import lombok.NoArgsConstructor;
+
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class RoleDto {
-    private UUID userId;
-    private UUID id;
     private String name;
     private String displayName;
 
-    public RoleDto(UUID id, String name, String displayName) {
-        this.id = id;
-        this.name = name;
-        this.displayName = displayName;
-    }
-    public RoleDto(){
+    private List<UUID> permissions;
 
-    }
 }

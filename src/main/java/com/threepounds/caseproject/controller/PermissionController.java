@@ -18,20 +18,15 @@ import java.util.UUID;
 public class PermissionController {
     private final PermissionService permissionService;
     private final PermissionMapper permissionMapper;
-    private final RoleService roleService;
 
     public PermissionController(PermissionService permissionService, PermissionMapper permissionMapper, RoleService roleService) {
         this.permissionService = permissionService;
         this.permissionMapper = permissionMapper;
-        this.roleService = roleService;
     }
 
     @PostMapping("")
     public ResponseEntity<PermissionResource> create(@RequestBody PermissionDto permissionDto){
         Permission permissionToSave=permissionMapper.permissionDtoToEntity(permissionDto);
-        Role role=roleService.getById(permissionDto.getRoleId())
-                .orElseThrow(()->new IllegalArgumentException());
-        permissionToSave.setRole(role);
         Permission savedPermission=permissionService.save(permissionToSave);
         PermissionResource permissionResource=permissionMapper.entityToPermissionResource(savedPermission);
         return ResponseEntity.ok(permissionResource);

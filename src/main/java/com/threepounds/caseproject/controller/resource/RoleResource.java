@@ -1,22 +1,21 @@
 package com.threepounds.caseproject.controller.resource;
 
+import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.UUID;
+import lombok.NoArgsConstructor;
+
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class RoleResource {
 
     private UUID id;
     private String name;
     private String displayName;
 
-    public RoleResource(UUID id, String name, String displayName) {
-        this.id = id;
-        this.name = name;
-        this.displayName = displayName;
+    private List<PermissionResource> permissions;
 
-    }
-    public RoleResource(){
-
-    }
 }
