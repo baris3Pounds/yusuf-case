@@ -1,5 +1,6 @@
 package com.threepounds.caseproject.service;
 
+import com.threepounds.caseproject.data.entity.Permission;
 import com.threepounds.caseproject.data.entity.Role;
 import com.threepounds.caseproject.data.repository.RoleRepository;
 import org.springframework.stereotype.Service;
@@ -27,4 +28,6 @@ public class RoleService {
     public List <Role> getRoles(){
         return roleRepository.findAll();
     }
+    public List<Role> list(List<UUID> roles){
+        return roleRepository.findAllById(roles);}
 }

@@ -1,9 +1,11 @@
 package com.threepounds.caseproject.controller;
 import com.threepounds.caseproject.controller.dto.UserDto;
 import com.threepounds.caseproject.controller.mapper.UserMapper;
-import com.threepounds.caseproject.controller.resource.CategoryResource;
 import com.threepounds.caseproject.controller.resource.UserResource;
+import com.threepounds.caseproject.data.entity.Permission;
+import com.threepounds.caseproject.data.entity.Role;
 import com.threepounds.caseproject.data.entity.User;
+import com.threepounds.caseproject.service.RoleService;
 import com.threepounds.caseproject.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,19 +14,23 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("user")
+@RequestMapping("users")
 public class UserController {
     private final UserMapper userMapper;
     private final UserService userService;
+    private final RoleService roleService;
 
-    public UserController(UserMapper userMapper, UserService userService) {
+    public UserController(UserMapper userMapper, UserService userService, RoleService roleService) {
         this.userMapper = userMapper;
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @PostMapping("")
     public ResponseEntity<UserResource>  createUser(@RequestBody UserDto userDto){
         User userToSave=userMapper.userDtoToEntity(userDto);
+        List<Role> roles = roleService.list(userDto.getRoles());
+        userToSave.setRoles(roles);
         User savedUser=userService.saveUser(userToSave);
        UserResource userResource=userMapper.userDto(savedUser);
 
@@ -47,10 +53,12 @@ public class UserController {
         User existingUser=userService.getByUserId(userId)
                 .orElseThrow(()->new RuntimeException());
         User mappedUser=userMapper.userDtoToEntity(userDto);
+        List<Role> roles = roleService.list(userDto.getRoles());
+        mappedUser.setRoles(roles);
         mappedUser.setId(existingUser.getId());
         User updateUser=userService.saveUser(mappedUser);
-        userMapper.userDto(mappedUser);
-        return ResponseEntity.ok(updateUser);
+        UserResource userResource=userMapper.userDto(updateUser);
+        return ResponseEntity.ok(userResource);
     }
     @GetMapping("")
     public ResponseEntity<List<UserResource>> list(){

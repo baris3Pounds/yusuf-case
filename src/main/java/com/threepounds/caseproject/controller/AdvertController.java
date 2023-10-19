@@ -65,9 +65,9 @@ public class AdvertController {
                 .orElseThrow(()->new RuntimeException());
         Advert mappedAdvert=advertMapper.advertDtoToEntity(advertDto);
         mappedAdvert.setId(existingAdvert.getId());
-        advertMapper.entityToAdvertResource(mappedAdvert);
         Advert updateAdvert=advertService.save(mappedAdvert);
-        return ResponseEntity.ok(updateAdvert);
+        AdvertResource advertResource= advertMapper.entityToAdvertResource(updateAdvert);
+        return ResponseEntity.ok(advertResource);
     }
     @GetMapping("")
     public ResponseEntity<List<AdvertResource>> list(){

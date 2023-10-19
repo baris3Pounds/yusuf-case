@@ -58,8 +58,8 @@ public class CategoryController {
     Category mappedCategory = categoryMapper.dtoToEntity(dto);
     mappedCategory.setId(existingCategory.getId());
     Category updatedCategory = categoryService.save(mappedCategory);
-    categoryMapper.categoryDto(mappedCategory);
-    return ResponseEntity.ok(updatedCategory);
+    CategoryResource categoryResource=categoryMapper.categoryDto(updatedCategory);
+    return ResponseEntity.ok(categoryResource);
   }
 
   @DeleteMapping("{id}")

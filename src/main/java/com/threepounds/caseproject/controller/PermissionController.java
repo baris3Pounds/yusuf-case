@@ -37,9 +37,9 @@ public class PermissionController {
                 .orElseThrow(()->new RuntimeException());
         Permission mappedPermission=permissionMapper.permissionDtoToEntity(permissionDto);
         mappedPermission.setId(existingPermission.getId());
-        permissionMapper.entityToPermissionResource(mappedPermission);
         Permission updatePermission=permissionService.save(mappedPermission);
-        return ResponseEntity.ok(updatePermission);
+        PermissionResource permissionResource=permissionMapper.entityToPermissionResource(updatePermission);
+        return ResponseEntity.ok(permissionResource);
     }
     @DeleteMapping("{id}")
     public ResponseEntity delete(@PathVariable UUID id){

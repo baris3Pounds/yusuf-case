@@ -1,10 +1,15 @@
 package com.threepounds.caseproject.controller.dto;
 
 import jakarta.persistence.Column;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDto {
 
     private UUID userId;
@@ -14,16 +19,7 @@ public class UserDto {
 
     private String email;
     private boolean userActive;
-public UserDto() {
-
-}
-    public UserDto(UUID userId, String userName, String name, String email, boolean userActive) {
-        this.userId = userId;
-        this.userName = userName;
-        this.name = name;
-        this.email = email;
-        this.userActive = userActive;
-    }
+    private List<UUID> roles;
 
 
 }

@@ -11,10 +11,11 @@ import java.util.List;
 
 @Mapper(componentModel="spring")
 public interface UserMapper {
+    @Mapping(source = "roles" , target = "roles", ignore = true)
     User userDtoToEntity(UserDto userDto);
     UserResource userDto(User user);
-    @Mapping(source = "role" , target = "role", ignore = true)
+    @Mapping(source = "roles" , target = "roles", ignore = true)
     List<UserResource> userDtoToList(List<User> user);
-    UserDto userEntityToDto(User entity);
+
 
 }

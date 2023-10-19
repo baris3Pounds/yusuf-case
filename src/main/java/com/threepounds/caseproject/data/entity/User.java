@@ -1,7 +1,9 @@
 package com.threepounds.caseproject.data.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.lang.NonNull;
@@ -10,6 +12,8 @@ import java.util.List;
 import java.util.UUID;
 @Data
 @Entity(name = "users")
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
 
@@ -26,20 +30,13 @@ public class User {
     private String email;
     @Column
     private boolean userActive;
-    @OneToMany(mappedBy = "user")
+    @ManyToMany
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles;
 
-    // TODO OneToMany 1 user 1 den fazla roles olabilir
 
-    public User(){
-
-    }
-    public User(UUID id, String userName, String name, String email, boolean userActive) {
-        this.id = id;
-        this.userName = userName;
-        this.name = name;
-        this.email = email;
-        this.userActive = userActive;
-    }
 }
 

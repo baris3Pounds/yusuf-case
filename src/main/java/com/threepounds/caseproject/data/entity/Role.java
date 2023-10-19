@@ -26,9 +26,8 @@ public class Role {
       joinColumns = @JoinColumn(name = "role_id"),
       inverseJoinColumns = @JoinColumn(name = "permission_id"))
   private List<Permission> permissions;
-  @ManyToOne
-  @JoinColumn(name = "user_id",referencedColumnName = "id")
-  private User user;
+  @ManyToMany(fetch = FetchType.LAZY,mappedBy = "roles")
+  private List<User> users;
 
   // TODO ManyToOne  1 den fazla role 1 user a ait olabilir
 

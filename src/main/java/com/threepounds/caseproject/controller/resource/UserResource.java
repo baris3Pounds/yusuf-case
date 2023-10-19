@@ -1,9 +1,13 @@
 package com.threepounds.caseproject.controller.resource;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserResource {
     private UUID id;
     private String userName;
@@ -12,13 +16,4 @@ public class UserResource {
 
     private String email;
 
-    public UserResource(UUID id, String userName, String name, String email) {
-        this.id = id;
-        this.userName = userName;
-        this.name = name;
-        this.email = email;
-    }
-    public UserResource(){
-
-    }
-}
+   }

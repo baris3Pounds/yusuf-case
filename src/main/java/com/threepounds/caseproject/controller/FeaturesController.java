@@ -49,9 +49,9 @@ public class FeaturesController {
                 .orElseThrow(()-> new RuntimeException());
         Features mappedFeature=featuresMapper.dtoToEntity(featuresDto);
         mappedFeature.setId(existingFeature.getId());
-        featuresMapper.featureToResource(mappedFeature);
         Features updateFeature=featuresService.save(mappedFeature);
-        return ResponseEntity.ok(updateFeature);
+        FeaturesResource featuresResource=featuresMapper.featureToResource(updateFeature);
+        return ResponseEntity.ok(featuresResource);
 
     }
     @GetMapping("{id}")
