@@ -3,6 +3,7 @@ package com.threepounds.caseproject.controller.mapper;
 import com.threepounds.caseproject.controller.dto.UserDto;
 import com.threepounds.caseproject.controller.resource.UserResource;
 import com.threepounds.caseproject.data.entity.User;
+import com.threepounds.caseproject.security.auth.SignUpRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -16,6 +17,9 @@ public interface UserMapper {
     UserResource userDto(User user);
     @Mapping(source = "roles" , target = "roles", ignore = true)
     List<UserResource> userDtoToList(List<User> user);
+
+
+    User userDtoToEntity(SignUpRequest signUpRequest);
 
 
 }

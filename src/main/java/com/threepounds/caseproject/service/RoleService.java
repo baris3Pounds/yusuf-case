@@ -30,4 +30,9 @@ public class RoleService {
     }
     public List<Role> list(List<UUID> roles){
         return roleRepository.findAllById(roles);}
+
+    public Optional <Role> getByName(String name){
+        return roleRepository.findByName(name);
+    }
+
 }

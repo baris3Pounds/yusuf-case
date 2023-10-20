@@ -22,12 +22,15 @@ public class User {
     @Column
     private UUID id;
     @Column
-    private String userName;
+    private String username;
     @Column
     private String name;
     @Column
     @NotNull
     private String email;
+
+    @Column
+    private String password;
     @Column
     private boolean userActive;
     @ManyToMany
