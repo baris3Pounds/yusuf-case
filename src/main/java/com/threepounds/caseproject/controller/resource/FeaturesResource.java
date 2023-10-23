@@ -1,17 +1,17 @@
 package com.threepounds.caseproject.controller.resource;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class FeaturesResource {
     private UUID id;
 
     private String title;
 
-    public FeaturesResource(UUID id, String title) {
-        this.id = id;
-        this.title = title;
-    }
-    public FeaturesResource(){}
+
 }
