@@ -1,8 +1,12 @@
 package com.threepounds.caseproject.controller.dto;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class FeaturesDto {
     private UUID categoryId;
 
@@ -12,13 +16,6 @@ public class FeaturesDto {
 
     private boolean active;
 
-    public FeaturesDto(UUID id, String title, boolean active) {
-        this.id = id;
-        this.title = title;
-        this.active = active;
-    }
-    public FeaturesDto(){
 
-    }
 
 }

@@ -1,10 +1,14 @@
 package com.threepounds.caseproject.controller.resource;
 
 import com.threepounds.caseproject.data.entity.Category;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AdvertResource {
   private UUID id;
 
@@ -16,17 +20,6 @@ public class AdvertResource {
 
   private CategoryResource category;
 
-  public AdvertResource( ) {
-
-  }
 
 
-
-  public AdvertResource(UUID id, String title, String description, boolean active, CategoryResource category) {
-    this.id = id;
-    this.title = title;
-    this.description = description;
-    this.active = active;
-    this.category = category;
-  }
 }

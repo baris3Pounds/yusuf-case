@@ -16,4 +16,5 @@ public interface RoleMapper {
     RoleResource roleDto(Role role);
     @Mapping(source = "permissions" , target = "permissions", ignore = true)
     List<RoleResource> roleDtoToList(List<Role> roles);
+
 }
