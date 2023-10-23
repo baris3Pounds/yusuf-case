@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/advert")
+@RequestMapping("/api/v1/advert")
 public class AdvertController {
     private final AdvertService advertService;
     private final AdvertMapper advertMapper;

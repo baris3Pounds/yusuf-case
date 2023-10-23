@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("users")
+@RequestMapping("/api/v1/users")
 public class UserController {
     private final UserMapper userMapper;
     private final UserService userService;

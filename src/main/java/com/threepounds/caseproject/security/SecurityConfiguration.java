@@ -1,23 +1,30 @@
 package com.threepounds.caseproject.security;
 
+import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
 @EnableWebSecurity
@@ -25,18 +32,36 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfiguration {
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
   private final SecurityUserService userService;
+
+
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http
-        .authorizeHttpRequests(request ->
-            request.requestMatchers(new AntPathRequestMatcher("/api/v1/auth/**")).permitAll()
-            .requestMatchers(new AntPathRequestMatcher("/h2-ui/*")).permitAll()
-            .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
-            .requestMatchers(new AntPathRequestMatcher( "/swagger-ui/**")).permitAll()
-            .anyRequest().authenticated())
-        .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
-        .authenticationProvider(authenticationProvider()).addFilterBefore(
-            jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+  public SecurityFilterChain securityFilterChain(HttpSecurity http,
+      HandlerMappingIntrospector introspector) throws Exception {
+
+    MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
+
+    http.csrf(csrfConfigurer ->
+        csrfConfigurer.ignoringRequestMatchers(mvcMatcherBuilder.pattern("/api/v1/**"),
+            PathRequest.toH2Console()));
+
+    http.headers(headersConfigurer ->
+        headersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
+
+
+    http.authorizeHttpRequests(auth ->
+        auth
+            .requestMatchers(mvcMatcherBuilder.pattern("/api/v1/auth/**")).permitAll()
+            .requestMatchers(mvcMatcherBuilder.pattern("/api/v1/roles/**")).permitAll()
+            .requestMatchers(mvcMatcherBuilder.pattern("/api/v1/users/**")).hasRole("USER")
+            //This line is optional in .authenticated() case as .anyRequest().authenticated()
+            //would be applied for H2 path anyway
+            .requestMatchers(PathRequest.toH2Console()).permitAll()
+            .anyRequest().authenticated()
+
+    ).authenticationProvider(authenticationProvider()).addFilterBefore(
+        jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);;
+
+
     return http.build();
   }
 

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("permissions")
+@RequestMapping("/api/v1/permissions")
 public class PermissionController {
     private final PermissionService permissionService;
     private final PermissionMapper permissionMapper;

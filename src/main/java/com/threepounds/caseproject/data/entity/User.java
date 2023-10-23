@@ -33,7 +33,7 @@ public class User {
     private String password;
     @Column
     private boolean userActive;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),

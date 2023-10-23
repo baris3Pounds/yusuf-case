@@ -32,7 +32,8 @@ public class AuthenticationServiceImpl implements AuthenticationService{
   public JwtAuthenticationResponse signup(SignUpRequest request) {
     User user = userMapper.userDtoToEntity(request);
     user.setUserActive(true);
-    Role userRole = roleService.getByName("USER").orElseThrow(()-> new RuntimeException());
+    user.setPassword(passwordEncoder.encode(request.getPassword()));
+    Role userRole = roleService.getByName("ROLE_USER").orElseThrow(()-> new RuntimeException());
     List<Role> roles = new ArrayList<>();
     roles.add(userRole);
     user.setRoles(roles);
