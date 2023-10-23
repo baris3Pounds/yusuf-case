@@ -52,7 +52,6 @@ public class SecurityConfiguration {
         auth
             .requestMatchers(mvcMatcherBuilder.pattern("/api/v1/auth/**")).permitAll()
             .requestMatchers(mvcMatcherBuilder.pattern("/api/v1/roles/**")).permitAll()
-            .requestMatchers(mvcMatcherBuilder.pattern("/api/v1/users/**")).hasRole("USER")
             //This line is optional in .authenticated() case as .anyRequest().authenticated()
             //would be applied for H2 path anyway
             .requestMatchers(PathRequest.toH2Console()).permitAll()
