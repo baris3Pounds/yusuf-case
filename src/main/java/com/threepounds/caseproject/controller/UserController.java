@@ -2,12 +2,13 @@ package com.threepounds.caseproject.controller;
 import com.threepounds.caseproject.controller.dto.UserDto;
 import com.threepounds.caseproject.controller.mapper.UserMapper;
 import com.threepounds.caseproject.controller.resource.UserResource;
-import com.threepounds.caseproject.data.entity.Permission;
 import com.threepounds.caseproject.data.entity.Role;
 import com.threepounds.caseproject.data.entity.User;
 import com.threepounds.caseproject.service.RoleService;
 import com.threepounds.caseproject.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,11 +20,14 @@ public class UserController {
     private final UserMapper userMapper;
     private final UserService userService;
     private final RoleService roleService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserMapper userMapper, UserService userService, RoleService roleService) {
+    public UserController(UserMapper userMapper, UserService userService, RoleService roleService,
+        PasswordEncoder passwordEncoder) {
         this.userMapper = userMapper;
         this.userService = userService;
         this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("")
@@ -31,6 +35,7 @@ public class UserController {
         User userToSave=userMapper.userDtoToEntity(userDto);
         List<Role> roles = roleService.list(userDto.getRoles());
         userToSave.setRoles(roles);
+        userToSave.setPassword(passwordEncoder.encode(userDto.getPassword()));
         User savedUser=userService.saveUser(userToSave);
        UserResource userResource=userMapper.userDto(savedUser);
 
