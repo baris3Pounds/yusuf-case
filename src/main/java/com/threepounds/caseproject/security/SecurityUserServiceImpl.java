@@ -1,5 +1,6 @@
 package com.threepounds.caseproject.security;
 
+import com.threepounds.caseproject.data.entity.Permission;
 import com.threepounds.caseproject.data.entity.Role;
 import com.threepounds.caseproject.data.entity.User;
 import com.threepounds.caseproject.data.repository.UserRepository;
@@ -48,6 +49,7 @@ public class SecurityUserServiceImpl implements SecurityUserService{
     for (Role userRole : userRoles) {
       setAuths.add(new SimpleGrantedAuthority(userRole.getName()));
     }
+
 
     List<GrantedAuthority> Result = new ArrayList<GrantedAuthority>(setAuths);
 

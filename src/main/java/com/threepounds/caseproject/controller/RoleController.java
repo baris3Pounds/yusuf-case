@@ -9,6 +9,7 @@ import com.threepounds.caseproject.service.PermissionService;
 import com.threepounds.caseproject.service.RoleService;
 import com.threepounds.caseproject.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,6 +39,7 @@ public class RoleController {
         RoleResource roleResource=roleMapper.roleDto(savedRole);
         return ResponseEntity.ok(roleResource);
     }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("{id}")
     public ResponseEntity update(@PathVariable UUID id,@RequestBody RoleDto roleDto){
         Role existingRole=roleService.getById(id)
@@ -50,11 +52,13 @@ public class RoleController {
         RoleResource roleResource = roleMapper.roleDto(updateRole);
         return ResponseEntity.ok(roleResource);
     }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("{id}")
     public ResponseEntity delete(@PathVariable UUID id){
         roleService.delete(id);
         return ResponseEntity.ok("success");
     }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("{id}")
     public ResponseEntity getOneRole(@PathVariable UUID id){
         Role role=roleService.getById(id)
@@ -62,6 +66,7 @@ public class RoleController {
         RoleResource roleResource=roleMapper.roleDto(role);
         return ResponseEntity.ok(roleResource);
     }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("")
     public ResponseEntity<List<RoleResource>> list(){
         List<RoleResource> roleResources=roleMapper.roleDtoToList(roleService.getRoles());

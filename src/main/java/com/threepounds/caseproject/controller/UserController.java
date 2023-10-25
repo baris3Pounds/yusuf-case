@@ -48,6 +48,7 @@ public class UserController {
            UserResource userResource= userMapper.userDto(user);
       return ResponseEntity.ok(userResource);
     }
+
     @DeleteMapping("{userId}")
     public ResponseEntity deleteOneUser(@PathVariable UUID userId){
         userService.deleteUser(userId);
@@ -65,6 +66,7 @@ public class UserController {
         UserResource userResource=userMapper.userDto(updateUser);
         return ResponseEntity.ok(userResource);
     }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("")
     public ResponseEntity<List<UserResource>> list(){
         List<UserResource> userResources = userMapper.userDtoToList(
