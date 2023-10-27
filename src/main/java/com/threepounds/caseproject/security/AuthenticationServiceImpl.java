@@ -7,6 +7,7 @@ import com.threepounds.caseproject.data.entity.Role;
 import com.threepounds.caseproject.data.entity.User;
 import com.threepounds.caseproject.data.repository.UserRepository;
 import com.threepounds.caseproject.security.auth.JwtAuthenticationResponse;
+import com.threepounds.caseproject.security.auth.PasswordResetRequest;
 import com.threepounds.caseproject.security.auth.SignUpRequest;
 import com.threepounds.caseproject.security.auth.SigninRequest;
 import com.threepounds.caseproject.service.PermissionService;
@@ -55,4 +56,16 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     String jwt = jwtService.generateToken(user.getEmail());
     return JwtAuthenticationResponse.builder().token(jwt).build();
   }
+
+    @Override
+  public JwtAuthenticationResponse passwordreset(PasswordResetRequest request) {
+    authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+    User user = userRepository.findByEmail(request.getEmail())
+            .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+    user.setPassword(passwordEncoder.encode(request.getNew_password()));
+    String jwt = jwtService.generateToken(user.getEmail());
+    return JwtAuthenticationResponse.builder().token(jwt).build();
+  }
+  
 }

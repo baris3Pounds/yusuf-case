@@ -3,6 +3,7 @@ package com.threepounds.caseproject.controller;
 
 import com.threepounds.caseproject.security.AuthenticationService;
 import com.threepounds.caseproject.security.auth.JwtAuthenticationResponse;
+import com.threepounds.caseproject.security.auth.PasswordResetRequest;
 import com.threepounds.caseproject.security.auth.SignUpRequest;
 import com.threepounds.caseproject.security.auth.SigninRequest;
 import lombok.RequiredArgsConstructor;
@@ -25,5 +26,10 @@ public class AuthenticationController {
   @PostMapping("/signin")
   public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SigninRequest request) {
     return ResponseEntity.ok(authenticationService.signin(request));
+  }
+
+  @PostMapping("/passwordreset")
+  public ResponseEntity<JwtAuthenticationResponse> passwordreset(@RequestBody PasswordResetRequest request) {
+    return ResponseEntity.ok(authenticationService.passwordreset(request));
   }
 }
