@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
@@ -44,6 +46,9 @@ public class SecurityConfiguration {
 
     http.authorizeHttpRequests(auth ->
         auth
+            .requestMatchers(
+            new AntPathRequestMatcher("/swagger-ui/**", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/v3/api-docs/**", HttpMethod.GET.name())).permitAll()
             .requestMatchers(mvcMatcherBuilder.pattern("/api/v1/auth/**")).permitAll()
             .requestMatchers(mvcMatcherBuilder.pattern("/api/v1/roles/**")).permitAll()
             .requestMatchers(mvcMatcherBuilder.pattern("/api/v1/users/**")).hasRole("ADMIN")

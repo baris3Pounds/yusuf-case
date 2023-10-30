@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequestMapping("/api/v1/roles")
 public class RoleController {
     private final RoleService roleService;
@@ -39,7 +40,6 @@ public class RoleController {
         RoleResource roleResource=roleMapper.roleDto(savedRole);
         return ResponseEntity.ok(roleResource);
     }
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("{id}")
     public ResponseEntity update(@PathVariable UUID id,@RequestBody RoleDto roleDto){
         Role existingRole=roleService.getById(id)
@@ -52,13 +52,11 @@ public class RoleController {
         RoleResource roleResource = roleMapper.roleDto(updateRole);
         return ResponseEntity.ok(roleResource);
     }
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("{id}")
     public ResponseEntity delete(@PathVariable UUID id){
         roleService.delete(id);
         return ResponseEntity.ok("success");
     }
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("{id}")
     public ResponseEntity getOneRole(@PathVariable UUID id){
         Role role=roleService.getById(id)
@@ -66,7 +64,7 @@ public class RoleController {
         RoleResource roleResource=roleMapper.roleDto(role);
         return ResponseEntity.ok(roleResource);
     }
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @GetMapping("")
     public ResponseEntity<List<RoleResource>> list(){
         List<RoleResource> roleResources=roleMapper.roleDtoToList(roleService.getRoles());
