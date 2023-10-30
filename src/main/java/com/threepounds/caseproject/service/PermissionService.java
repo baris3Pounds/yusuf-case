@@ -1,6 +1,7 @@
 package com.threepounds.caseproject.service;
 
 import com.threepounds.caseproject.data.entity.Permission;
+import com.threepounds.caseproject.data.entity.Role;
 import com.threepounds.caseproject.data.repository.PermissionsRepository;
 import org.springframework.stereotype.Service;
 
@@ -30,5 +31,8 @@ public class PermissionService {
 
     public List<Permission> list(List<UUID> permissions){
         return permissionsRepository.findAllById(permissions);
+    }
+    public Optional <Permission> getByName(String name){
+        return permissionsRepository.findByName(name);
     }
 }

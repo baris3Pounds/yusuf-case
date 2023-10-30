@@ -1,12 +1,16 @@
 package com.threepounds.caseproject.security;
 
+import com.threepounds.caseproject.controller.mapper.RoleMapper;
 import com.threepounds.caseproject.controller.mapper.UserMapper;
+import com.threepounds.caseproject.data.entity.Permission;
 import com.threepounds.caseproject.data.entity.Role;
 import com.threepounds.caseproject.data.entity.User;
 import com.threepounds.caseproject.data.repository.UserRepository;
 import com.threepounds.caseproject.security.auth.JwtAuthenticationResponse;
+import com.threepounds.caseproject.security.auth.PasswordResetRequest;
 import com.threepounds.caseproject.security.auth.SignUpRequest;
 import com.threepounds.caseproject.security.auth.SigninRequest;
+import com.threepounds.caseproject.service.PermissionService;
 import com.threepounds.caseproject.service.RoleService;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +30,6 @@ public class AuthenticationServiceImpl implements AuthenticationService{
   private final AuthenticationManager authenticationManager;
 
   private final UserMapper userMapper;
-
   private final RoleService roleService;
   @Override
   public JwtAuthenticationResponse signup(SignUpRequest request) {
@@ -37,6 +40,8 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     List<Role> roles = new ArrayList<>();
     roles.add(userRole);
     user.setRoles(roles);
+
+
     userRepository.save(user);
     var jwt = jwtService.generateToken(user.getUsername());
     return JwtAuthenticationResponse.builder().token(jwt).build();
@@ -51,4 +56,16 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     String jwt = jwtService.generateToken(user.getEmail());
     return JwtAuthenticationResponse.builder().token(jwt).build();
   }
+
+    @Override
+  public JwtAuthenticationResponse passwordreset(PasswordResetRequest request) {
+    authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+    User user = userRepository.findByEmail(request.getEmail())
+            .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+    user.setPassword(passwordEncoder.encode(request.getNew_password()));
+    String jwt = jwtService.generateToken(user.getEmail());
+    return JwtAuthenticationResponse.builder().token(jwt).build();
+  }
+  
 }
