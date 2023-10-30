@@ -47,10 +47,11 @@ public class SecurityUserServiceImpl implements SecurityUserService{
     // add user's authorities
     for (Role userRole : userRoles) {
       setAuths.add(new SimpleGrantedAuthority(userRole.getName()));
+      userRole.getPermissions().stream()
+          .map(p -> new SimpleGrantedAuthority(p.getName()))
+          .forEach(setAuths::add);
     }
 
-    List<GrantedAuthority> Result = new ArrayList<GrantedAuthority>(setAuths);
-
-    return Result;
+    return new ArrayList<GrantedAuthority>(setAuths);
   }
 }

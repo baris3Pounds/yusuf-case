@@ -65,6 +65,8 @@ public class UserController {
         UserResource userResource=userMapper.userDto(updateUser);
         return ResponseEntity.ok(userResource);
     }
+
+    @PreAuthorize("hasAuthority('VIEW_USERS')")
     @GetMapping("")
     public ResponseEntity<List<UserResource>> list(){
         List<UserResource> userResources = userMapper.userDtoToList(

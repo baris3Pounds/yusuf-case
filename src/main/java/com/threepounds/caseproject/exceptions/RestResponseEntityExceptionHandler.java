@@ -9,21 +9,29 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler {
+
     @ExceptionHandler(value = IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> IllegalArgument()
-            {
+    public ResponseEntity<ErrorResponse> illegalArgument() {
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setErrorCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        errorResponse.setErrorMessage("Geçersiz parametre");
+        errorResponse.setErrorMessage("Invalid Parameter");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
-    @ExceptionHandler (value =RuntimeException.class)
-    public ResponseEntity<ErrorResponse> NotFound()
-    {
-        ErrorResponse errorResponse=new ErrorResponse();
+
+    @ExceptionHandler(value = NotFoundException.class)
+    public ResponseEntity<ErrorResponse> notFound() {
+        ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setErrorCode(HttpStatus.NOT_FOUND.value());
         errorResponse.setErrorMessage("Mot Found");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(value = Exception.class)
+    public ResponseEntity<ErrorResponse> generalException() {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setErrorCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        errorResponse.setErrorMessage("Internal Server Error");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 
 
