@@ -4,6 +4,7 @@ package com.threepounds.caseproject.exceptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.data.crossstore.ChangeSetPersister.*;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -24,6 +25,14 @@ public class RestResponseEntityExceptionHandler {
         errorResponse.setErrorCode(HttpStatus.NOT_FOUND.value());
         errorResponse.setErrorMessage("Mot Found");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> accessDenied() {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setErrorCode(HttpStatus.FORBIDDEN.value());
+        errorResponse.setErrorMessage("Forbidden");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
     @ExceptionHandler(value = Exception.class)

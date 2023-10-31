@@ -47,11 +47,12 @@ public class SecurityConfiguration {
     http.authorizeHttpRequests(auth ->
         auth
             .requestMatchers(
+            new AntPathRequestMatcher("/v3/api-docs/**", HttpMethod.GET.name()),
             new AntPathRequestMatcher("/swagger-ui/**", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/v3/api-docs/**", HttpMethod.GET.name())).permitAll()
+            new AntPathRequestMatcher("/v2/api-docs/**", HttpMethod.GET.name()),
+                new AntPathRequestMatcher("/swagger-resources/**", HttpMethod.GET.name())).permitAll()
             .requestMatchers(mvcMatcherBuilder.pattern("/api/v1/auth/**")).permitAll()
             .requestMatchers(mvcMatcherBuilder.pattern("/api/v1/roles/**")).permitAll()
-            .requestMatchers(mvcMatcherBuilder.pattern("/api/v1/users/**")).hasRole("ADMIN")
 
             //This line is optional in .authenticated() case as .anyRequest().authenticated()
             //would be applied for H2 path anyway
