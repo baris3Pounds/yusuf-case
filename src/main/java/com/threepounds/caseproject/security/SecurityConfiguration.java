@@ -47,10 +47,12 @@ public class SecurityConfiguration {
     http.authorizeHttpRequests(auth ->
         auth
             .requestMatchers(
-            new AntPathRequestMatcher("/v3/api-docs/**", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/swagger-ui/**", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/v2/api-docs/**", HttpMethod.GET.name()),
-                new AntPathRequestMatcher("/swagger-resources/**", HttpMethod.GET.name())).permitAll()
+                mvcMatcherBuilder.pattern("/v3/api-docs/**"),
+                mvcMatcherBuilder.pattern("/v3/api-docs.yaml"),
+                mvcMatcherBuilder.pattern("/swagger-ui/**"),
+                mvcMatcherBuilder.pattern("/swagger-ui.html"),
+                mvcMatcherBuilder.pattern("/v2/api-docs/**"),
+                mvcMatcherBuilder.pattern("/swagger-resources/**")).permitAll()
             .requestMatchers(mvcMatcherBuilder.pattern("/api/v1/auth/**")).permitAll()
             .requestMatchers(mvcMatcherBuilder.pattern("/api/v1/roles/**")).permitAll()
 
