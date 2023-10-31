@@ -32,7 +32,7 @@ public class PermissionController {
         return ResponseEntity.ok(permissionResource);
     }
     @PutMapping("{id}")
-    public ResponseEntity update(@PathVariable UUID id,@RequestBody PermissionDto permissionDto){
+    public ResponseEntity<PermissionResource> update(@PathVariable UUID id,@RequestBody PermissionDto permissionDto){
         Permission existingPermission=permissionService.getById(id)
                 .orElseThrow(()->new RuntimeException());
         Permission mappedPermission=permissionMapper.permissionDtoToEntity(permissionDto);
@@ -42,12 +42,12 @@ public class PermissionController {
         return ResponseEntity.ok(permissionResource);
     }
     @DeleteMapping("{id}")
-    public ResponseEntity delete(@PathVariable UUID id){
+    public ResponseEntity<String> delete(@PathVariable UUID id){
         permissionService.delete(id);
         return ResponseEntity.ok("success");
     }
     @GetMapping("{id}")
-    public ResponseEntity getOnePermission(@PathVariable UUID id){
+    public ResponseEntity<PermissionResource> getOnePermission(@PathVariable UUID id){
         Permission permission=permissionService.getById(id)
                 .orElseThrow(()->new RuntimeException());
         PermissionResource permissionResource=permissionMapper.entityToPermissionResource(permission);
