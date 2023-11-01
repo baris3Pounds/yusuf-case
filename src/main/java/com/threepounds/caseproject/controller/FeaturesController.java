@@ -8,6 +8,8 @@ import com.threepounds.caseproject.data.entity.Features;
 import com.threepounds.caseproject.service.CategoryService;
 import com.threepounds.caseproject.service.FeaturesService;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +31,7 @@ public class FeaturesController {
     }
 
     @PostMapping("")
-    @Cacheable(cacheNames = "categories")
+    @Cacheable(value = "features",key = "#id")
     public ResponseEntity<FeaturesResource> create(@RequestBody FeaturesDto featuresDto){
         Features featuresToSave=featuresMapper.dtoToEntity(featuresDto);
         Category category= categoryService.getById(featuresDto.getCategoryId())
@@ -40,12 +42,15 @@ public class FeaturesController {
         return ResponseEntity.ok(featuresResource);
 
     }
+    @CacheEvict(value = "features",key = "#id")
     @DeleteMapping("{id}")
     public ResponseEntity delete(@PathVariable UUID id){
         featuresService.delete(id);
         return ResponseEntity.ok("Ok");
     }
+
     @PutMapping("{id}")
+    @CachePut(value = "features",key = "#id")
     public ResponseEntity update(@PathVariable UUID id,@RequestBody FeaturesDto featuresDto){
         Features existingFeature=featuresService.getById(id)
                 .orElseThrow(()-> new RuntimeException());
@@ -56,6 +61,7 @@ public class FeaturesController {
         return ResponseEntity.ok(featuresResource);
 
     }
+    @Cacheable(value = "features",key = "#id")
     @GetMapping("{id}")
     public ResponseEntity getOneFeature(@PathVariable UUID id){
         Features features=featuresService.getById(id)
@@ -63,6 +69,7 @@ public class FeaturesController {
         FeaturesResource featuresResource=featuresMapper.featureToResource(features);
         return ResponseEntity.ok(featuresResource);
     }
+    @Cacheable(value = "features",key = "#id")
     @GetMapping("")
     public ResponseEntity<List<FeaturesResource>> list(){
         List<FeaturesResource> featuresResources = featuresMapper.featuresToResourceList(

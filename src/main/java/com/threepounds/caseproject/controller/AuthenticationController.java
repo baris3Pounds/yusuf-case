@@ -7,6 +7,7 @@ import com.threepounds.caseproject.security.auth.PasswordResetRequest;
 import com.threepounds.caseproject.security.auth.SignUpRequest;
 import com.threepounds.caseproject.security.auth.SigninRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthenticationController {
   private final AuthenticationService authenticationService;
+
   @PostMapping("/signup")
   public ResponseEntity<JwtAuthenticationResponse> signup(@RequestBody SignUpRequest request) {
     return ResponseEntity.ok(authenticationService.signup(request));
