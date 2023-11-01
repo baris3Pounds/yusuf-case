@@ -6,6 +6,7 @@ import com.threepounds.caseproject.data.entity.Permission;
 import com.threepounds.caseproject.data.entity.Role;
 import com.threepounds.caseproject.data.entity.User;
 import com.threepounds.caseproject.data.repository.UserRepository;
+import com.threepounds.caseproject.exceptions.NotFoundException;
 import com.threepounds.caseproject.security.auth.JwtAuthenticationResponse;
 import com.threepounds.caseproject.security.auth.PasswordResetRequest;
 import com.threepounds.caseproject.security.auth.SignUpRequest;
@@ -36,7 +37,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     User user = userMapper.userDtoToEntity(request);
     user.setUserActive(true);
     user.setPassword(passwordEncoder.encode(request.getPassword()));
-    Role userRole = roleService.getByName("ROLE_USER").orElseThrow(()-> new RuntimeException());
+    Role userRole = roleService.getByName("ROLE_USER").orElseThrow(()-> new NotFoundException("Role not found"));
     List<Role> roles = new ArrayList<>();
     roles.add(userRole);
     user.setRoles(roles);
