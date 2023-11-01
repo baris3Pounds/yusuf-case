@@ -42,7 +42,7 @@ public class UserController {
         return ResponseEntity.ok(userResource);
     }
     @GetMapping("{id}")
-    public ResponseEntity getOneUser(@PathVariable UUID id){
+    public ResponseEntity<UserResource> getOneUser(@PathVariable UUID id){
         User user = userService.getByUserId(id)
             .orElseThrow(() -> new RuntimeException());
            UserResource userResource= userMapper.userDto(user);
@@ -50,12 +50,12 @@ public class UserController {
     }
 
     @DeleteMapping("{userId}")
-    public ResponseEntity deleteOneUser(@PathVariable UUID userId){
+    public ResponseEntity<String> deleteOneUser(@PathVariable UUID userId){
         userService.deleteUser(userId);
         return ResponseEntity.ok("Success");
     }
     @PutMapping("{userId}")
-            public ResponseEntity updateOneUser(@PathVariable UUID userId,@RequestBody UserDto userDto){
+            public ResponseEntity<UserResource> updateOneUser(@PathVariable UUID userId,@RequestBody UserDto userDto){
         User existingUser=userService.getByUserId(userId)
                 .orElseThrow(()->new RuntimeException());
         User mappedUser=userMapper.userDtoToEntity(userDto);
