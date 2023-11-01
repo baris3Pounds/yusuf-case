@@ -52,7 +52,7 @@ public class CategoryController {
   // mapperdan dto entitye çevrilmeli
   // save edilir.
   @PutMapping("{id}")
-  public ResponseEntity update(@PathVariable UUID id, @RequestBody CategoryDto dto){
+  public ResponseEntity<CategoryResource> update(@PathVariable UUID id, @RequestBody CategoryDto dto){
     Category existingCategory = categoryService.getById(id)
         .orElseThrow(() -> new RuntimeException());
     Category mappedCategory = categoryMapper.dtoToEntity(dto);
@@ -63,12 +63,12 @@ public class CategoryController {
   }
 
   @DeleteMapping("{id}")
-  public ResponseEntity delete(@PathVariable UUID id){
+  public ResponseEntity<String> delete(@PathVariable UUID id){
     categoryService.delete(id);
     return ResponseEntity.ok("success");
   }
   @GetMapping("{id}")
-  public ResponseEntity getOneCategory(@PathVariable UUID id){
+  public ResponseEntity<CategoryResource> getOneCategory(@PathVariable UUID id){
     Category category= categoryService.getById(id)
 
             .orElseThrow(()-> new RuntimeException());

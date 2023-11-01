@@ -44,14 +44,14 @@ public class FeaturesController {
     }
     @CacheEvict(value = "features",key = "#id")
     @DeleteMapping("{id}")
-    public ResponseEntity delete(@PathVariable UUID id){
+    public ResponseEntity<String> delete(@PathVariable UUID id){
         featuresService.delete(id);
         return ResponseEntity.ok("Ok");
     }
 
     @PutMapping("{id}")
     @CachePut(value = "features",key = "#id")
-    public ResponseEntity update(@PathVariable UUID id,@RequestBody FeaturesDto featuresDto){
+    public ResponseEntity<FeaturesResource> update(@PathVariable UUID id,@RequestBody FeaturesDto featuresDto){
         Features existingFeature=featuresService.getById(id)
                 .orElseThrow(()-> new RuntimeException());
         Features mappedFeature=featuresMapper.dtoToEntity(featuresDto);
@@ -63,7 +63,7 @@ public class FeaturesController {
     }
     @Cacheable(value = "features",key = "#id")
     @GetMapping("{id}")
-    public ResponseEntity getOneFeature(@PathVariable UUID id){
+    public ResponseEntity<FeaturesResource> getOneFeature(@PathVariable UUID id){
         Features features=featuresService.getById(id)
                 .orElseThrow(()->new RuntimeException());
         FeaturesResource featuresResource=featuresMapper.featureToResource(features);

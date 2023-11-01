@@ -41,7 +41,7 @@ public class RoleController {
         return ResponseEntity.ok(roleResource);
     }
     @PutMapping("{id}")
-    public ResponseEntity update(@PathVariable UUID id,@RequestBody RoleDto roleDto){
+    public ResponseEntity<RoleResource> update(@PathVariable UUID id,@RequestBody RoleDto roleDto){
         Role existingRole=roleService.getById(id)
                 .orElseThrow(()->new RuntimeException());
         Role mappedRole=roleMapper.dtoToEntity(roleDto);
@@ -53,12 +53,12 @@ public class RoleController {
         return ResponseEntity.ok(roleResource);
     }
     @DeleteMapping("{id}")
-    public ResponseEntity delete(@PathVariable UUID id){
+    public ResponseEntity<String> delete(@PathVariable UUID id){
         roleService.delete(id);
         return ResponseEntity.ok("success");
     }
     @GetMapping("{id}")
-    public ResponseEntity getOneRole(@PathVariable UUID id){
+    public ResponseEntity<RoleResource> getOneRole(@PathVariable UUID id){
         Role role=roleService.getById(id)
                 .orElseThrow(()->new RuntimeException());
         RoleResource roleResource=roleMapper.roleDto(role);

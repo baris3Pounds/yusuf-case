@@ -48,19 +48,19 @@ public class AdvertController {
 
     }
     @DeleteMapping("{id}")
-    public ResponseEntity delete(@PathVariable UUID id){
+    public ResponseEntity<String> delete(@PathVariable UUID id){
          advertService.delete(id);
         return ResponseEntity.ok("success");
     }
     @GetMapping("{id}")
-    public ResponseEntity getOneAdvert(@PathVariable UUID id){
+    public ResponseEntity<AdvertResource> getOneAdvert(@PathVariable UUID id){
        Advert advert= advertService.getById(id)
                 .orElseThrow(()-> new IllegalArgumentException() );
         AdvertResource advertResource = advertMapper.entityToAdvertResource(advert);
         return ResponseEntity.ok(advertResource);
     }
     @PutMapping("{id}")
-    public ResponseEntity update(@PathVariable UUID id,@RequestBody AdvertDto advertDto){
+    public ResponseEntity<AdvertResource> update(@PathVariable UUID id,@RequestBody AdvertDto advertDto){
         Advert existingAdvert=advertService.getById(id)
                 .orElseThrow(()->new RuntimeException());
         Advert mappedAdvert=advertMapper.advertDtoToEntity(advertDto);
