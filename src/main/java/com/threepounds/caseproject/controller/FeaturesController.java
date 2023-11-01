@@ -8,6 +8,7 @@ import com.threepounds.caseproject.data.entity.Features;
 import com.threepounds.caseproject.service.CategoryService;
 import com.threepounds.caseproject.service.FeaturesService;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,7 @@ public class FeaturesController {
     }
 
     @PostMapping("")
+    @Cacheable(cacheNames = "categories")
     public ResponseEntity<FeaturesResource> create(@RequestBody FeaturesDto featuresDto){
         Features featuresToSave=featuresMapper.dtoToEntity(featuresDto);
         Category category= categoryService.getById(featuresDto.getCategoryId())
