@@ -44,6 +44,16 @@ public class RestResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
+    @ExceptionHandler(value = EmailCheckException.class)
+    public ResponseEntity<ErrorResponse> existingEmail(EmailCheckException e) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setErrorCode(HttpStatus.BAD_REQUEST.value());
+        errorResponse.setErrorMessage(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+
+
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<ErrorResponse> generalException(Exception e) {
         ErrorResponse errorResponse = new ErrorResponse();

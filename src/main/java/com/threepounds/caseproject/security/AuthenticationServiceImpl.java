@@ -6,6 +6,7 @@ import com.threepounds.caseproject.data.entity.Permission;
 import com.threepounds.caseproject.data.entity.Role;
 import com.threepounds.caseproject.data.entity.User;
 import com.threepounds.caseproject.data.repository.UserRepository;
+import com.threepounds.caseproject.exceptions.EmailCheckException;
 import com.threepounds.caseproject.exceptions.NotFoundException;
 import com.threepounds.caseproject.security.auth.JwtAuthenticationResponse;
 import com.threepounds.caseproject.security.auth.PasswordResetRequest;
@@ -41,6 +42,10 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     List<Role> roles = new ArrayList<>();
     roles.add(userRole);
     user.setRoles(roles);
+    Optional<User> emailEntry = userRepository.findByEmail(user.getEmail());
+    if(emailEntry.isPresent()){
+    throw new EmailCheckException("This email is already exist");
+  }
 
 
     userRepository.save(user);
