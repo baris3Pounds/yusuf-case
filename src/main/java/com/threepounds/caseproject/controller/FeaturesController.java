@@ -3,6 +3,7 @@ package com.threepounds.caseproject.controller;
 import com.threepounds.caseproject.controller.dto.FeaturesDto;
 import com.threepounds.caseproject.controller.mapper.FeaturesMapper;
 import com.threepounds.caseproject.controller.resource.FeaturesResource;
+import com.threepounds.caseproject.controller.response.ResponseModel;
 import com.threepounds.caseproject.data.entity.Category;
 import com.threepounds.caseproject.data.entity.Features;
 import com.threepounds.caseproject.service.CategoryService;
@@ -11,6 +12,7 @@ import com.threepounds.caseproject.service.FeaturesService;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,30 +53,31 @@ public class FeaturesController {
 
     @PutMapping("{id}")
     @CachePut(value = "features",key = "#id")
-    public ResponseEntity<FeaturesResource> update(@PathVariable UUID id,@RequestBody FeaturesDto featuresDto){
+    public ResponseModel<FeaturesResource> update(@PathVariable UUID id,@RequestBody FeaturesDto featuresDto){
         Features existingFeature=featuresService.getById(id)
                 .orElseThrow(()-> new RuntimeException());
         Features mappedFeature=featuresMapper.dtoToEntity(featuresDto);
         mappedFeature.setId(existingFeature.getId());
         Features updateFeature=featuresService.save(mappedFeature);
         FeaturesResource featuresResource=featuresMapper.featureToResource(updateFeature);
-        return ResponseEntity.ok(featuresResource);
+        return new ResponseModel<>(HttpStatus.OK.value(),featuresResource);
 
     }
+
     @Cacheable(value = "features",key = "#id")
     @GetMapping("{id}")
-    public ResponseEntity<FeaturesResource> getOneFeature(@PathVariable UUID id){
-        Features features=featuresService.getById(id)
-                .orElseThrow(()->new RuntimeException());
-        FeaturesResource featuresResource=featuresMapper.featureToResource(features);
-        return ResponseEntity.ok(featuresResource);
+    public ResponseModel<FeaturesResource> getOneFeature(@PathVariable UUID id){
+        Features features = featuresService.getById(id)
+            .orElseThrow(() -> new RuntimeException());
+        FeaturesResource featuresResource = featuresMapper.featureToResource(features);
+        return new ResponseModel(HttpStatus.OK.value(),featuresResource);
     }
-    @Cacheable(value = "features",key = "#id")
+
     @GetMapping("")
-    public ResponseEntity<List<FeaturesResource>> list(){
+    public ResponseModel<List<FeaturesResource>> list(){
         List<FeaturesResource> featuresResources = featuresMapper.featuresToResourceList(
             featuresService.getAllFeatures());
-        return ResponseEntity.ok(featuresResources);
+        return new ResponseModel(HttpStatus.OK.value(),featuresResources);
     }
 
 
