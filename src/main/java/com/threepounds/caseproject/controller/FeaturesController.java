@@ -6,6 +6,7 @@ import com.threepounds.caseproject.controller.resource.FeaturesResource;
 import com.threepounds.caseproject.controller.response.ResponseModel;
 import com.threepounds.caseproject.data.entity.Category;
 import com.threepounds.caseproject.data.entity.Features;
+import com.threepounds.caseproject.exceptions.NotFoundException;
 import com.threepounds.caseproject.service.CategoryService;
 import com.threepounds.caseproject.service.FeaturesService;
 
@@ -33,7 +34,6 @@ public class FeaturesController {
     }
 
     @PostMapping("")
-    @Cacheable(value = "features",key = "#id")
     public ResponseEntity<FeaturesResource> create(@RequestBody FeaturesDto featuresDto){
         Features featuresToSave=featuresMapper.dtoToEntity(featuresDto);
         Category category= categoryService.getById(featuresDto.getCategoryId())
@@ -55,12 +55,12 @@ public class FeaturesController {
     @CachePut(value = "features",key = "#id")
     public ResponseModel<FeaturesResource> update(@PathVariable UUID id,@RequestBody FeaturesDto featuresDto){
         Features existingFeature=featuresService.getById(id)
-                .orElseThrow(()-> new RuntimeException());
+                .orElseThrow(()-> new NotFoundException("Feature not found"));
         Features mappedFeature=featuresMapper.dtoToEntity(featuresDto);
         mappedFeature.setId(existingFeature.getId());
         Features updateFeature=featuresService.save(mappedFeature);
         FeaturesResource featuresResource=featuresMapper.featureToResource(updateFeature);
-        return new ResponseModel<>(HttpStatus.OK.value(),featuresResource);
+        return new ResponseModel<>(HttpStatus.OK.value(),featuresResource, null);
 
     }
 
@@ -70,14 +70,14 @@ public class FeaturesController {
         Features features = featuresService.getById(id)
             .orElseThrow(() -> new RuntimeException());
         FeaturesResource featuresResource = featuresMapper.featureToResource(features);
-        return new ResponseModel(HttpStatus.OK.value(),featuresResource);
+        return new ResponseModel(HttpStatus.OK.value(),featuresResource, null);
     }
 
     @GetMapping("")
     public ResponseModel<List<FeaturesResource>> list(){
         List<FeaturesResource> featuresResources = featuresMapper.featuresToResourceList(
             featuresService.getAllFeatures());
-        return new ResponseModel(HttpStatus.OK.value(),featuresResources);
+        return new ResponseModel(HttpStatus.OK.value(),featuresResources, null);
     }
 
 

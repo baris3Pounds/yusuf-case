@@ -8,12 +8,15 @@ public class ResponseModel<T> {
 
   private T body;
 
+  private String errorMessage;
+
   public ResponseModel() {
   }
 
-  public ResponseModel(int statusCode, T body) {
+  public ResponseModel(int statusCode, T body, String errorMessage) {
     this.statusCode = statusCode;
     this.body = body;
+    this.errorMessage = errorMessage;
   }
 
   public int getStatusCode() {
@@ -30,5 +33,13 @@ public class ResponseModel<T> {
 
   public void setBody(T body) {
     this.body = body;
+  }
+
+  public String getErrorMessage() {
+    return errorMessage;
+  }
+
+  public void setErrorMessage(String errorMessage) {
+    this.errorMessage = errorMessage;
   }
 }
