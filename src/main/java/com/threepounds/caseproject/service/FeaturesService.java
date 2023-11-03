@@ -2,6 +2,7 @@ package com.threepounds.caseproject.service;
 
 import com.threepounds.caseproject.data.entity.Features;
 import com.threepounds.caseproject.data.repository.FeaturesRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +22,7 @@ private final FeaturesRepository featuresRepository;
     public void delete(UUID id){
          featuresRepository.deleteById(id);
     }
+
     public Optional<Features> getById(UUID id){
         return featuresRepository.findById(id);
     }
