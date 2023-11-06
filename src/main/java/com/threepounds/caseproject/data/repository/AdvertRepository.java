@@ -2,6 +2,7 @@ package com.threepounds.caseproject.data.repository;
 
 import com.threepounds.caseproject.data.entity.Advert;
 import com.threepounds.caseproject.data.entity.Category;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +11,6 @@ import java.util.UUID;
 public interface AdvertRepository extends JpaRepository<Advert,UUID> {
 
 
-
+    List<Advert> findByCategory(Category category);
 
 }
