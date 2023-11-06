@@ -1,6 +1,7 @@
 package com.threepounds.caseproject.service;
 import com.threepounds.caseproject.data.entity.Advert;
 
+import com.threepounds.caseproject.data.entity.Category;
 import com.threepounds.caseproject.data.repository.AdvertRepository;
 import org.springframework.stereotype.Service;
 
@@ -34,5 +35,8 @@ public class AdvertService {
         return advertRepository.findAll();
     }
 
+    public List<Advert> advertsByCategory(Category category){
+        return advertRepository.findByCategory(category);
+    }
     
 }
