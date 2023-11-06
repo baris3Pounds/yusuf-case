@@ -1,5 +1,4 @@
 package com.threepounds.caseproject.redis;
-
 import java.time.Duration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

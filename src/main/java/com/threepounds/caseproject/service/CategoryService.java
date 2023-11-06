@@ -11,10 +11,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CategoryService {
+  private final AdvertService advertService;
 
   private final CategoryRepository repository;
 
-  public CategoryService(CategoryRepository repository) {
+  public CategoryService(AdvertService advertService, CategoryRepository repository) {
+    this.advertService = advertService;
     this.repository = repository;
   }
 
