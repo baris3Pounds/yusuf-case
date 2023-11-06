@@ -1,6 +1,7 @@
 package com.threepounds.caseproject.service;
 
 
+import com.threepounds.caseproject.data.entity.Advert;
 import com.threepounds.caseproject.data.entity.Category;
 import com.threepounds.caseproject.data.repository.CategoryRepository;
 import java.util.List;
@@ -32,4 +33,5 @@ public class CategoryService {
   public void delete(UUID categoryId){
     repository.deleteById(categoryId);
   }
+
 }
