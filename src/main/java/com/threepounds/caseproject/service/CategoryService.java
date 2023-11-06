@@ -1,6 +1,7 @@
 package com.threepounds.caseproject.service;
 
 
+import com.threepounds.caseproject.data.entity.Advert;
 import com.threepounds.caseproject.data.entity.Category;
 import com.threepounds.caseproject.data.repository.CategoryRepository;
 import java.util.List;
@@ -10,10 +11,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CategoryService {
+  private final AdvertService advertService;
 
   private final CategoryRepository repository;
 
-  public CategoryService(CategoryRepository repository) {
+  public CategoryService(AdvertService advertService, CategoryRepository repository) {
+    this.advertService = advertService;
     this.repository = repository;
   }
 
@@ -32,4 +35,5 @@ public class CategoryService {
   public void delete(UUID categoryId){
     repository.deleteById(categoryId);
   }
+
 }

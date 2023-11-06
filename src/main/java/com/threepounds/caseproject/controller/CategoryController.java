@@ -4,10 +4,18 @@ package com.threepounds.caseproject.controller;
 import com.threepounds.caseproject.controller.dto.CategoryDto;
 import com.threepounds.caseproject.controller.mapper.CategoryMapper;
 import com.threepounds.caseproject.controller.resource.CategoryResource;
+import com.threepounds.caseproject.controller.response.ResponseModel;
+import com.threepounds.caseproject.data.entity.Advert;
 import com.threepounds.caseproject.data.entity.Category;
+import com.threepounds.caseproject.exceptions.NotFoundException;
 import com.threepounds.caseproject.service.CategoryService;
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,18 +41,19 @@ public class CategoryController {
 
 
   @GetMapping("")
-  public ResponseEntity<List<CategoryResource>> list(){
+  public ResponseModel<List<CategoryResource>> list() {
+
     List<CategoryResource> categoryResources = categoryMapper.categoryDtoList(
-        categoryService.list());
-    return ResponseEntity.ok(categoryResources);
+            categoryService.list());
+    return new ResponseModel<>(HttpStatus.OK.value(), categoryResources, null);
   }
 
   @PostMapping("")
-  public ResponseEntity<CategoryResource> create(@RequestBody CategoryDto categoryDto){
+  public ResponseModel<CategoryResource> create(@RequestBody CategoryDto categoryDto) {
     Category categoryToSave = categoryMapper.dtoToEntity(categoryDto);
     Category savedCategory = categoryService.save(categoryToSave);
-    CategoryResource categoryResource=categoryMapper.categoryDto(savedCategory);
-    return ResponseEntity.ok(categoryResource);
+    CategoryResource categoryResource = categoryMapper.categoryDto(savedCategory);
+    return new ResponseModel<>(HttpStatus.OK.value(), categoryResource, null);
   }
 
   // TODO PutMapping mevcut kategoriyi güncellemeli
@@ -52,28 +61,46 @@ public class CategoryController {
   // mapperdan dto entitye çevrilmeli
   // save edilir.
   @PutMapping("{id}")
-  public ResponseEntity<CategoryResource> update(@PathVariable UUID id, @RequestBody CategoryDto dto){
+  public ResponseModel<CategoryResource> update(@PathVariable UUID id, @RequestBody CategoryDto dto) {
     Category existingCategory = categoryService.getById(id)
-        .orElseThrow(() -> new RuntimeException());
+            .orElseThrow(() -> new NotFoundException("Category not found for update"));
     Category mappedCategory = categoryMapper.dtoToEntity(dto);
     mappedCategory.setId(existingCategory.getId());
     Category updatedCategory = categoryService.save(mappedCategory);
-    CategoryResource categoryResource=categoryMapper.categoryDto(updatedCategory);
-    return ResponseEntity.ok(categoryResource);
+    CategoryResource categoryResource = categoryMapper.categoryDto(updatedCategory);
+    return new ResponseModel<>(HttpStatus.OK.value(), categoryResource, null);
   }
 
   @DeleteMapping("{id}")
-  public ResponseEntity<String> delete(@PathVariable UUID id){
+  public ResponseModel<String> delete(@PathVariable UUID id) {
     categoryService.delete(id);
-    return ResponseEntity.ok("success");
+    return new ResponseModel<>(HttpStatus.OK.value(), "success", null);
   }
+
   @GetMapping("{id}")
-  public ResponseEntity<CategoryResource> getOneCategory(@PathVariable UUID id){
-    Category category= categoryService.getById(id)
 
-            .orElseThrow(()-> new RuntimeException());
-   CategoryResource categoryResource=categoryMapper.categoryDto(category);
-    return ResponseEntity.ok(categoryResource);
+  public ResponseModel<CategoryResource> getOneCategory(@PathVariable UUID id) {
+    Category category = categoryService.getById(id)
+            .orElseThrow(() -> new NotFoundException("Category not found"));
+    CategoryResource categoryResource = categoryMapper.categoryDto(category);
+
+    return new ResponseModel(HttpStatus.OK.value(), categoryResource, null);
   }
 
+  @GetMapping("adverts/{id}")
+  public ResponseModel<CategoryResource> getCategoryWithAdvert(@PathVariable UUID id) {
+    Category category = categoryService.getById(id)
+            .orElseThrow(() -> new NotFoundException("Category not found"));
+    CategoryResource categoryResource = categoryMapper.categoryDto(category);
+    Set<Advert> adverts = new HashSet<>();
+    for (Advert advert : category.getAdvert()) {
+      advert.setCategory(null);
+      adverts.add(advert);
+    }
+    categoryResource.setAdverts(adverts);
+    return new ResponseModel(HttpStatus.OK.value(), categoryResource, null);
+
+
+  }
 }
+
