@@ -43,8 +43,6 @@ public class AdvertController {
         Category category = categoryService.getById(advertDto.getCategoryId())
             .orElseThrow(()-> new IllegalArgumentException());
         Advert savedAdvert=advertService.save(advertToSave);
-        category.getAdvert().add(advertToSave);
-        categoryService.save(category);
         savedAdvert.setCategory(category);
         advertService.save(savedAdvert);
         AdvertResource advertResource=advertMapper.entityToAdvertResource(savedAdvert);
