@@ -30,8 +30,6 @@ public class Category {
   private boolean active;
 
   @OneToMany(mappedBy = "category")
-  private List<Advert> advert;
-  @OneToMany(mappedBy = "category")
   private List<Features> features;
 
 
@@ -44,7 +42,6 @@ public class Category {
     this.name = name;
     this.description = description;
     this.active = active;
-    this.advert = advert;
   }
 
 }
