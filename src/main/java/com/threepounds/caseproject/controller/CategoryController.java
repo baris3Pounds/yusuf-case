@@ -87,20 +87,6 @@ public class CategoryController {
     return new ResponseModel(HttpStatus.OK.value(), categoryResource, null);
   }
 
-  @GetMapping("adverts/{id}")
-  public ResponseModel<CategoryResource> getCategoryWithAdvert(@PathVariable UUID id) {
-    Category category = categoryService.getById(id)
-            .orElseThrow(() -> new NotFoundException("Category not found"));
-    CategoryResource categoryResource = categoryMapper.categoryDto(category);
-    Set<Advert> adverts = new HashSet<>();
-    for (Advert advert : category.getAdvert()) {
-      advert.setCategory(null);
-      adverts.add(advert);
-    }
-    categoryResource.setAdverts(adverts);
-    return new ResponseModel(HttpStatus.OK.value(), categoryResource, null);
 
-
-  }
 }
 
