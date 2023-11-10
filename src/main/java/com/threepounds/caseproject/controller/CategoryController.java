@@ -86,7 +86,7 @@ public class CategoryController {
 
     return new ResponseModel(HttpStatus.OK.value(), categoryResource, null);
   }
-
+/*
   @GetMapping("adverts/{id}")
   public ResponseModel<CategoryResource> getCategoryWithAdvert(@PathVariable UUID id) {
     Category category = categoryService.getById(id)
@@ -102,5 +102,6 @@ public class CategoryController {
 
 
   }
+  */
 }
 
