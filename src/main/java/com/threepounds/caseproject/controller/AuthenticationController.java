@@ -2,10 +2,7 @@ package com.threepounds.caseproject.controller;
 
 
 import com.threepounds.caseproject.security.AuthenticationService;
-import com.threepounds.caseproject.security.auth.JwtAuthenticationResponse;
-import com.threepounds.caseproject.security.auth.PasswordResetRequest;
-import com.threepounds.caseproject.security.auth.SignUpRequest;
-import com.threepounds.caseproject.security.auth.SigninRequest;
+import com.threepounds.caseproject.security.auth.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +20,11 @@ public class AuthenticationController {
   @PostMapping("/signup")
   public ResponseEntity<JwtAuthenticationResponse> signup(@RequestBody SignUpRequest request) {
     return ResponseEntity.ok(authenticationService.signup(request));
+  }
+
+  @PostMapping("/confirm")
+  public ResponseEntity<JwtAuthenticationResponse> confirm(@RequestBody ConfirmRequest request) {
+    return ResponseEntity.ok(authenticationService.confirm(request));
   }
 
   @PostMapping("/signin")
