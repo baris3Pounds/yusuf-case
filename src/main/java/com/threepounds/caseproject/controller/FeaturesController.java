@@ -38,8 +38,9 @@ public class FeaturesController {
         Features featuresToSave=featuresMapper.dtoToEntity(featuresDto);
         Category category= categoryService.getById(featuresDto.getCategoryId())
                 .orElseThrow(()->new IllegalArgumentException());
-        featuresToSave.setCategory(category);
         Features savedFeature =featuresService.save(featuresToSave);
+        savedFeature.setCategory(category);
+        featuresService.save(savedFeature);
         FeaturesResource featuresResource = featuresMapper.featureToResource(savedFeature);
         return ResponseEntity.ok(featuresResource);
 

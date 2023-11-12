@@ -17,25 +17,4 @@ services:
       - 5002:8081
     depends_on:
       - redis
-  h2:
-      container_name: 'h2'
-      hostname: 'h2'
-      image: 1000kit/h2
-      ports:
-        - "8181:8181"
-        - "1521:1521"
-      environment:
-      - H2_OPTIONS=-ifNotExists
-      - H2_TCP_ALLOW_OTHERS=true
-      volumes:
-      - ./opt/h2-data
 
-  liquibase:
-    container_name: 'liquibase'
-    image: liquibase/liquibase:latest
-    restart: always
-    volumes:
-      - ./liquibase-changelogs:/liquibase-changelogs
-    command: --changeLogFile=/liquibase-changelogs/db.changelog-master.xml
-    depends_on:
-      - h2
