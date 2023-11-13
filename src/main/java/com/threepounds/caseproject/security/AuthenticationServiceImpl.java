@@ -8,7 +8,10 @@ import com.threepounds.caseproject.data.entity.User;
 import com.threepounds.caseproject.data.repository.UserRepository;
 import com.threepounds.caseproject.exceptions.EmailCheckException;
 import com.threepounds.caseproject.exceptions.NotFoundException;
-import com.threepounds.caseproject.security.auth.*;
+import com.threepounds.caseproject.security.auth.JwtAuthenticationResponse;
+import com.threepounds.caseproject.security.auth.PasswordResetRequest;
+import com.threepounds.caseproject.security.auth.SignUpRequest;
+import com.threepounds.caseproject.security.auth.SigninRequest;
 import com.threepounds.caseproject.service.PermissionService;
 import com.threepounds.caseproject.service.RoleService;
 import java.util.ArrayList;
@@ -33,7 +36,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
   @Override
   public JwtAuthenticationResponse signup(SignUpRequest request) {
     User user = userMapper.userDtoToEntity(request);
-    user.setUserActive(false);
+    user.setUserActive(true);
     user.setPassword(passwordEncoder.encode(request.getPassword()));
     Role userRole = roleService.getByName("ROLE_USER").orElseThrow(()-> new NotFoundException("Role not found"));
     List<Role> roles = new ArrayList<>();
@@ -49,17 +52,6 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     var jwt = jwtService.generateToken(user.getUsername());
     return JwtAuthenticationResponse.builder().token(jwt).build();
   }
-
-  @Override
-  public JwtAuthenticationResponse confirm(ConfirmRequest request) {
-    User user = userMapper.userDtoToEntity(request);
-    user.setUserActive(true);
-
-    userRepository.save(user);
-    var jwt = jwtService.generateToken(user.getUsername());
-    return JwtAuthenticationResponse.builder().token(jwt).build();
-  }
-
 
   @Override
   public JwtAuthenticationResponse signin(SigninRequest request) {
