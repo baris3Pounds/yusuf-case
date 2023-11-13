@@ -1,22 +1,18 @@
 package com.threepounds.caseproject.security;
-
-import com.threepounds.caseproject.controller.mapper.RoleMapper;
 import com.threepounds.caseproject.controller.mapper.UserMapper;
-import com.threepounds.caseproject.data.entity.Permission;
 import com.threepounds.caseproject.data.entity.Role;
 import com.threepounds.caseproject.data.entity.User;
+import com.threepounds.caseproject.data.entity.ValidationCode;
 import com.threepounds.caseproject.data.repository.UserRepository;
 import com.threepounds.caseproject.exceptions.EmailCheckException;
 import com.threepounds.caseproject.exceptions.NotFoundException;
-import com.threepounds.caseproject.security.auth.JwtAuthenticationResponse;
-import com.threepounds.caseproject.security.auth.PasswordResetRequest;
-import com.threepounds.caseproject.security.auth.SignUpRequest;
-import com.threepounds.caseproject.security.auth.SigninRequest;
-import com.threepounds.caseproject.service.PermissionService;
+import com.threepounds.caseproject.security.auth.*;
 import com.threepounds.caseproject.service.RoleService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import com.threepounds.caseproject.service.ValidationCodeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,6 +26,8 @@ public class AuthenticationServiceImpl implements AuthenticationService{
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
+  private final ValidationCodeService validationCodeService;
+
 
   private final UserMapper userMapper;
   private final RoleService roleService;
@@ -45,11 +43,16 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     Optional<User> emailEntry = userRepository.findByEmail(user.getEmail());
     if(emailEntry.isPresent()){
     throw new EmailCheckException("This email is already exist");
-  }
-
-
+      }
     userRepository.save(user);
     var jwt = jwtService.generateToken(user.getUsername());
+    Random random=new Random();
+    int code=random.nextInt(9000)+1000;
+    ValidationCode validationCode=new ValidationCode();
+    validationCode.setCode(code);
+    validationCode.setActive(true);
+    validationCodeService.create(validationCode);
+
     return JwtAuthenticationResponse.builder().token(jwt).build();
   }
 
@@ -60,10 +63,14 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     User user = userRepository.findByEmail(request.getEmail())
         .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
     String jwt = jwtService.generateToken(user.getEmail());
+    ValidationCode validationCode= validationCodeService.getCode(3955).orElseThrow(()->new NotFoundException("Invalid code"));
+    validationCode.setActive(false);
+    validationCode.setId(validationCode.getId());
+    validationCodeService.create(validationCode);
     return JwtAuthenticationResponse.builder().token(jwt).build();
   }
 
-    @Override
+  @Override
   public JwtAuthenticationResponse passwordreset(PasswordResetRequest request) {
     authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
@@ -73,5 +80,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     String jwt = jwtService.generateToken(user.getEmail());
     return JwtAuthenticationResponse.builder().token(jwt).build();
   }
-  
+
+
+
 }

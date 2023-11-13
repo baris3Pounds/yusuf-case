@@ -1,24 +1,19 @@
 package com.threepounds.caseproject.controller;
-
-
 import com.threepounds.caseproject.security.AuthenticationService;
-import com.threepounds.caseproject.security.auth.JwtAuthenticationResponse;
-import com.threepounds.caseproject.security.auth.PasswordResetRequest;
-import com.threepounds.caseproject.security.auth.SignUpRequest;
-import com.threepounds.caseproject.security.auth.SigninRequest;
+import com.threepounds.caseproject.security.auth.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+
 
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
   private final AuthenticationService authenticationService;
+
+
 
   @PostMapping("/signup")
   public ResponseEntity<JwtAuthenticationResponse> signup(@RequestBody SignUpRequest request) {
@@ -27,11 +22,14 @@ public class AuthenticationController {
 
   @PostMapping("/signin")
   public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SigninRequest request) {
-    return ResponseEntity.ok(authenticationService.signin(request));
+
+        return ResponseEntity.ok(authenticationService.signin(request));
   }
 
   @PostMapping("/passwordreset")
   public ResponseEntity<JwtAuthenticationResponse> passwordreset(@RequestBody PasswordResetRequest request) {
-    return ResponseEntity.ok(authenticationService.passwordreset(request));
+        return ResponseEntity.ok(authenticationService.passwordreset(request));
   }
+
+
 }
