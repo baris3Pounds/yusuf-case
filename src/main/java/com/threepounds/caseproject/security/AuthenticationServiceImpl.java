@@ -53,7 +53,8 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     validationCode.setOtp(randomCode);
     validationCode.setUsed(false);
     validationCodeService.create(validationCode);
-
+    OtpRequest otpRequest=new OtpRequest();
+    otpRequest.setUserId(user.getId());
     return JwtAuthenticationResponse.builder().token(jwt).build();
   }
 
