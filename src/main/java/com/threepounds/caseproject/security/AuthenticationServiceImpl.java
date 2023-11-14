@@ -49,8 +49,9 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     Random random=new Random();
     int code=random.nextInt(9000)+1000;
     ValidationCode validationCode=new ValidationCode();
-    validationCode.setCode(code);
-    validationCode.setActive(true);
+    String randomCode=Integer.toString(code);
+    validationCode.setOtp(randomCode);
+    validationCode.setUsed(false);
     validationCodeService.create(validationCode);
 
     return JwtAuthenticationResponse.builder().token(jwt).build();
@@ -63,10 +64,6 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     User user = userRepository.findByEmail(request.getEmail())
         .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
     String jwt = jwtService.generateToken(user.getEmail());
-    ValidationCode validationCode= validationCodeService.getCode(3955).orElseThrow(()->new NotFoundException("Invalid code"));
-    validationCode.setActive(false);
-    validationCode.setId(validationCode.getId());
-    validationCodeService.create(validationCode);
     return JwtAuthenticationResponse.builder().token(jwt).build();
   }
 
@@ -81,6 +78,10 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     return JwtAuthenticationResponse.builder().token(jwt).build();
   }
 
+  @Override
+  public JwtAuthenticationResponse confirm(OtpRequest request) {
+    return null;
+  }
 
 
 }

@@ -30,6 +30,10 @@ public class AuthenticationController {
   public ResponseEntity<JwtAuthenticationResponse> passwordreset(@RequestBody PasswordResetRequest request) {
         return ResponseEntity.ok(authenticationService.passwordreset(request));
   }
+  @PostMapping("confirm")
+  public ResponseEntity<JwtAuthenticationResponse> confirm(@RequestBody OtpRequest request){
+    return ResponseEntity.ok(authenticationService.confirm(request));
+  }
 
 
 }
