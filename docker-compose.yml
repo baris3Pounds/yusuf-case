@@ -17,3 +17,4 @@ services:
       - 5002:8081
     depends_on:
       - redis
+
