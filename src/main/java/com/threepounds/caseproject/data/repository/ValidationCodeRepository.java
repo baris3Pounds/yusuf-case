@@ -8,5 +8,5 @@ import java.util.Optional;
 import java.util.UUID;
 @Repository
 public interface ValidationCodeRepository extends JpaRepository<ValidationCode,UUID> {
-    Optional<ValidationCode> findByCode(int code);
+    Optional<ValidationCode> findByOtp(String otp);
 }

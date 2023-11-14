@@ -18,7 +18,7 @@ public class ValidationCodeService {
 
        return validationCodeRepository.save(validationCode);
           }
-     public Optional<ValidationCode> getCode(int code){
-        return validationCodeRepository.findByCode(code);
+     public Optional<ValidationCode> getCode(String otp){
+        return validationCodeRepository.findByOtp(otp);
      }
 }
