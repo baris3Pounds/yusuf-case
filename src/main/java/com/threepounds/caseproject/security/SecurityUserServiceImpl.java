@@ -37,7 +37,7 @@ public class SecurityUserServiceImpl implements SecurityUserService{
 
   private UserDetails buildUserForAuthentication(User user, List<GrantedAuthority> authorities) {
     return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
-        user.isUserActive(), true, true, true, authorities) {
+        user.isActive(), true, true, true, authorities) {
     };
   }
 
