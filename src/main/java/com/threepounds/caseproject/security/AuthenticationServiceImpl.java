@@ -34,7 +34,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
   @Override
   public JwtAuthenticationResponse signup(SignUpRequest request) {
     User user = userMapper.userDtoToEntity(request);
-    user.setUserActive(true);
+    user.setActive(true);
     user.setPassword(passwordEncoder.encode(request.getPassword()));
     Role userRole = roleService.getByName("ROLE_USER").orElseThrow(()-> new NotFoundException("Role not found"));
     List<Role> roles = new ArrayList<>();
@@ -46,12 +46,12 @@ public class AuthenticationServiceImpl implements AuthenticationService{
       }
     userRepository.save(user);
     var jwt = jwtService.generateToken(user.getUsername());
-    Random random=new Random();
-    int code=random.nextInt(9000)+1000;
-    ValidationCode validationCode=new ValidationCode();
-    validationCode.setCode(code);
-    validationCode.setActive(true);
-    validationCodeService.create(validationCode);
+//    Random random=new Random();
+//    int code=random.nextInt(9000)+1000;
+//    ValidationCode validationCode=new ValidationCode();
+//    validationCode.setCode(code);
+//    validationCode.setActive(true);
+//    validationCodeService.create(validationCode);
 
     return JwtAuthenticationResponse.builder().token(jwt).build();
   }
@@ -63,10 +63,10 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     User user = userRepository.findByEmail(request.getEmail())
         .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
     String jwt = jwtService.generateToken(user.getEmail());
-    ValidationCode validationCode= validationCodeService.getCode(3955).orElseThrow(()->new NotFoundException("Invalid code"));
-    validationCode.setActive(false);
-    validationCode.setId(validationCode.getId());
-    validationCodeService.create(validationCode);
+//    ValidationCode validationCode= validationCodeService.getCode(3955).orElseThrow(()->new NotFoundException("Invalid code"));
+//    validationCode.setActive(false);
+//    validationCode.setId(validationCode.getId());
+//    validationCodeService.create(validationCode);
     return JwtAuthenticationResponse.builder().token(jwt).build();
   }
 
