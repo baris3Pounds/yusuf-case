@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+
+    <changeSet id="2" author="tevfikuykun">
+        <insert tableName="users">
+            <column name="id" value="43c9e3f4-c7ef-45e8-920b-753f53ff2634"/>
+            <column name="username" value="bariskantar"/>
+            <column name="name" value="Baris Kantar"/>
+            <column name="email" value="baris@3pounds.io"/>
+            <column name="password" value="$2a$10$PToopQ8tFKUE0EFdoeX1r.2OL1esx0YTxwUcug4xc2t/jY0lr.Zm2"/>
+            <column name="active" value="true"/>
+        </insert>
+        <insert tableName="users">
+            <column name="id" value="53c9e3f4-c7ef-45e8-920b-753f53ff2634"/>
+            <column name="username" value="yusufkaya"/>
+            <column name="name" value="Yusuf Kaya"/>
+            <column name="email" value="yusuf@3pounds.io"/>
+            <column name="password" value="$2a$10$PToopQ8tFKUE0EFdoeX1r.2OL1esx0YTxwUcug4xc2t/jY0lr.Zm2"/>
+            <column name="active" value="true"/>
+        </insert>
+        <insert tableName="users">
+            <column name="id" value="63c9e3f4-c7ef-45e8-920b-753f53ff2634"/>
+            <column name="username" value="tevfikuykun"/>
+            <column name="name" value="Tevfik Uykun"/>
+            <column name="email" value="tevfik@3pounds.io"/>
+            <column name="password" value="$2a$10$PToopQ8tFKUE0EFdoeX1r.2OL1esx0YTxwUcug4xc2t/jY0lr.Zm2"/>
+            <column name="active" value="true"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
