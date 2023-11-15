@@ -1,23 +1,21 @@
 package com.threepounds.caseproject.security;
 
-import com.threepounds.caseproject.controller.mapper.RoleMapper;
 import com.threepounds.caseproject.controller.mapper.UserMapper;
-import com.threepounds.caseproject.data.entity.Permission;
+import com.threepounds.caseproject.controller.response.ResponseModel;
 import com.threepounds.caseproject.data.entity.Role;
 import com.threepounds.caseproject.data.entity.User;
+import com.threepounds.caseproject.data.entity.ValidationCode;
 import com.threepounds.caseproject.data.repository.UserRepository;
 import com.threepounds.caseproject.exceptions.EmailCheckException;
 import com.threepounds.caseproject.exceptions.NotFoundException;
-import com.threepounds.caseproject.security.auth.JwtAuthenticationResponse;
-import com.threepounds.caseproject.security.auth.PasswordResetRequest;
-import com.threepounds.caseproject.security.auth.SignUpRequest;
-import com.threepounds.caseproject.security.auth.SigninRequest;
-import com.threepounds.caseproject.service.PermissionService;
+import com.threepounds.caseproject.security.auth.*;
 import com.threepounds.caseproject.service.RoleService;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
+
+import com.threepounds.caseproject.service.ValidationCodeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,53 +23,88 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationServiceImpl implements AuthenticationService{
+public class AuthenticationServiceImpl implements AuthenticationService {
+
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
+  private final ValidationCodeService validationCodeService;
 
   private final UserMapper userMapper;
   private final RoleService roleService;
+
   @Override
   public JwtAuthenticationResponse signup(SignUpRequest request) {
     User user = userMapper.userDtoToEntity(request);
-    user.setUserActive(true);
+    user.setUserActive(false);
     user.setPassword(passwordEncoder.encode(request.getPassword()));
-    Role userRole = roleService.getByName("ROLE_USER").orElseThrow(()-> new NotFoundException("Role not found"));
+    Role userRole = roleService.getByName("ROLE_USER")
+        .orElseThrow(() -> new NotFoundException("Role not found"));
     List<Role> roles = new ArrayList<>();
     roles.add(userRole);
     user.setRoles(roles);
     Optional<User> emailEntry = userRepository.findByEmail(user.getEmail());
-    if(emailEntry.isPresent()){
-    throw new EmailCheckException("This email is already exist");
-  }
-
-
+    if (emailEntry.isPresent()) {
+      throw new EmailCheckException("This email is already exist");
+    }
     userRepository.save(user);
     var jwt = jwtService.generateToken(user.getUsername());
-    return JwtAuthenticationResponse.builder().token(jwt).build();
+    Random random = new Random();
+    StringBuilder code = new StringBuilder();
+    for (int i = 0; i < 4; i++) {
+      code.append(random.nextInt(10));
+    }
+    ValidationCode validationCode = new ValidationCode();
+    validationCode.setUserId(user.getId());
+    validationCode.setOtp(code.toString());
+    validationCode.setUsed(false);
+    validationCodeService.save(validationCode);
+    return JwtAuthenticationResponse.builder().otp(code.toString()).token(jwt).build();
   }
 
   @Override
+  public ResponseModel<String> confirm(ConfirmRequest request) {
+
+    Optional<ValidationCode> validationCode = validationCodeService.getByCodeAndUserId(
+        request.getOtp(), request.getUserId());
+    ResponseModel<String> model = new ResponseModel<>();
+
+    if (validationCode.isPresent()) {
+      User user = userRepository.findById(request.getUserId())
+          .orElseThrow(() -> new NotFoundException("User not found."));
+      user.setUserActive(true);
+      userRepository.save(user);
+      model.setStatusCode(HttpStatus.OK.value());
+      model.setBody("User activated.");
+      validationCode.get().setUsed(true);
+      validationCodeService.save(validationCode.get());
+    } else {
+      model.setStatusCode(HttpStatus.BAD_REQUEST.value());
+      model.setBody("Code or user invalid.");
+    }
+    return model;
+  }
+
+
+  @Override
   public JwtAuthenticationResponse signin(SigninRequest request) {
-    authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
     User user = userRepository.findByEmail(request.getEmail())
         .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
     String jwt = jwtService.generateToken(user.getEmail());
     return JwtAuthenticationResponse.builder().token(jwt).build();
   }
 
-    @Override
+  @Override
   public JwtAuthenticationResponse passwordreset(PasswordResetRequest request) {
     authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
     User user = userRepository.findByEmail(request.getEmail())
-            .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+        .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
     user.setPassword(passwordEncoder.encode(request.getNew_password()));
     String jwt = jwtService.generateToken(user.getEmail());
     return JwtAuthenticationResponse.builder().token(jwt).build();
   }
-  
+
+
 }

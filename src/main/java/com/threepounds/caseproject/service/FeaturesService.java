@@ -1,5 +1,7 @@
 package com.threepounds.caseproject.service;
 
+import com.threepounds.caseproject.data.entity.Advert;
+import com.threepounds.caseproject.data.entity.Category;
 import com.threepounds.caseproject.data.entity.Features;
 import com.threepounds.caseproject.data.repository.FeaturesRepository;
 import org.springframework.cache.annotation.Cacheable;
@@ -28,5 +30,8 @@ private final FeaturesRepository featuresRepository;
     }
     public List<Features> getAllFeatures(){
         return featuresRepository.findAll();
+    }
+    public List<Features> featuresByCategory(Category category){
+        return featuresRepository.findByCategory(category);
     }
 }

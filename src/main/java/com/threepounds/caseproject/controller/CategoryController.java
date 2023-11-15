@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -61,6 +64,7 @@ public class CategoryController {
   // mapperdan dto entitye çevrilmeli
   // save edilir.
   @PutMapping("{id}")
+  @CachePut(value = "category" ,key = "#id")
   public ResponseModel<CategoryResource> update(@PathVariable UUID id, @RequestBody CategoryDto dto) {
     Category existingCategory = categoryService.getById(id)
             .orElseThrow(() -> new NotFoundException("Category not found for update"));
@@ -72,13 +76,14 @@ public class CategoryController {
   }
 
   @DeleteMapping("{id}")
+  @CacheEvict(value = "category" ,key = "#id")
   public ResponseModel<String> delete(@PathVariable UUID id) {
     categoryService.delete(id);
     return new ResponseModel<>(HttpStatus.OK.value(), "success", null);
   }
 
   @GetMapping("{id}")
-
+  @Cacheable(value = "category",key = "#id")
   public ResponseModel<CategoryResource> getOneCategory(@PathVariable UUID id) {
     Category category = categoryService.getById(id)
             .orElseThrow(() -> new NotFoundException("Category not found"));
@@ -87,20 +92,6 @@ public class CategoryController {
     return new ResponseModel(HttpStatus.OK.value(), categoryResource, null);
   }
 
-  @GetMapping("adverts/{id}")
-  public ResponseModel<CategoryResource> getCategoryWithAdvert(@PathVariable UUID id) {
-    Category category = categoryService.getById(id)
-            .orElseThrow(() -> new NotFoundException("Category not found"));
-    CategoryResource categoryResource = categoryMapper.categoryDto(category);
-    Set<Advert> adverts = new HashSet<>();
-    for (Advert advert : category.getAdvert()) {
-      advert.setCategory(null);
-      adverts.add(advert);
-    }
-    categoryResource.setAdverts(adverts);
-    return new ResponseModel(HttpStatus.OK.value(), categoryResource, null);
 
-
-  }
 }
 

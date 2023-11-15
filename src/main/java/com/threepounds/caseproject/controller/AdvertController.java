@@ -10,6 +10,10 @@ import com.threepounds.caseproject.service.AdvertService;
 import com.threepounds.caseproject.service.CategoryService;
 import java.util.List;
 import java.util.UUID;
+
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,8 +47,6 @@ public class AdvertController {
         Category category = categoryService.getById(advertDto.getCategoryId())
             .orElseThrow(()-> new IllegalArgumentException());
         Advert savedAdvert=advertService.save(advertToSave);
-        category.getAdvert().add(advertToSave);
-        categoryService.save(category);
         savedAdvert.setCategory(category);
         advertService.save(savedAdvert);
         AdvertResource advertResource=advertMapper.entityToAdvertResource(savedAdvert);
@@ -52,11 +54,13 @@ public class AdvertController {
 
     }
     @DeleteMapping("{id}")
+    @CacheEvict(value = "advert",key = "#id")
     public ResponseEntity<String> delete(@PathVariable UUID id){
          advertService.delete(id);
         return ResponseEntity.ok("success");
     }
     @GetMapping("{id}")
+    @Cacheable(value = "advert",key = "#id")
     public ResponseEntity<AdvertResource> getOneAdvert(@PathVariable UUID id){
        Advert advert= advertService.getById(id)
                 .orElseThrow(()-> new IllegalArgumentException() );
@@ -64,6 +68,7 @@ public class AdvertController {
         return ResponseEntity.ok(advertResource);
     }
     @PutMapping("{id}")
+    @CachePut(value = "advert",key="#id")
     public ResponseEntity<AdvertResource> update(@PathVariable UUID id,@RequestBody AdvertDto advertDto){
         Advert existingAdvert=advertService.getById(id)
                 .orElseThrow(()->new RuntimeException());
