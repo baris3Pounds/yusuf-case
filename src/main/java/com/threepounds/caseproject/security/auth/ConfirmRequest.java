@@ -11,6 +11,6 @@ package com.threepounds.caseproject.security.auth;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ConfirmRequest {
-    private UUID user_id;
+    private UUID userId;
     private String otp;
 }

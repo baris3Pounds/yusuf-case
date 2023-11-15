@@ -9,4 +9,5 @@ import java.util.UUID;
 @Repository
 public interface ValidationCodeRepository extends JpaRepository<ValidationCode,UUID> {
     Optional<ValidationCode> findByOtp(String otp);
+    Optional<ValidationCode> findByOtpAndUserId(String otp, UUID userId);
 }

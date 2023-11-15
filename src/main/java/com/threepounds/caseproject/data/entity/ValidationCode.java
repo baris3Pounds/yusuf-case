@@ -20,7 +20,7 @@ public class ValidationCode {
     @GeneratedValue
     private UUID id;
     @Column
-    private UUID user_id;
+    private UUID userId;
     @Column
     private String otp;
     @Column

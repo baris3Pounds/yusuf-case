@@ -1,4 +1,5 @@
 package com.threepounds.caseproject.controller;
+import com.threepounds.caseproject.controller.response.ResponseModel;
 import com.threepounds.caseproject.security.AuthenticationService;
 import com.threepounds.caseproject.security.auth.*;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +32,8 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.passwordreset(request));
   }
   @PostMapping("confirm")
-  public String confirm(@RequestBody ConfirmRequest request){
-    return authenticationService.confirm(request).toString();
+  public ResponseModel confirm(@RequestBody ConfirmRequest request){
+    return authenticationService.confirm(request);
   }
 
 

@@ -1,6 +1,7 @@
 package com.threepounds.caseproject.security;
 
 
+import com.threepounds.caseproject.controller.response.ResponseModel;
 import com.threepounds.caseproject.security.auth.*;
 
 
@@ -11,6 +12,6 @@ public interface AuthenticationService {
   
   JwtAuthenticationResponse passwordreset(PasswordResetRequest request);
 
-  String confirm(ConfirmRequest request);
+  ResponseModel confirm(ConfirmRequest request);
 
 }
