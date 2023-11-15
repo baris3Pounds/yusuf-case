@@ -21,5 +21,4 @@ public interface UserMapper {
 
     User userDtoToEntity(SignUpRequest signUpRequest);
 
-
 }

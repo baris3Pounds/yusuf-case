@@ -11,6 +11,6 @@ public interface AuthenticationService {
   
   JwtAuthenticationResponse passwordreset(PasswordResetRequest request);
 
-  JwtAuthenticationResponse confirm(OtpRequest request);
+  String confirm(ConfirmRequest request);
 
 }

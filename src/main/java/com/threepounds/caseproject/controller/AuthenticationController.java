@@ -31,8 +31,8 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.passwordreset(request));
   }
   @PostMapping("confirm")
-  public ResponseEntity<JwtAuthenticationResponse> confirm(@RequestBody OtpRequest request){
-    return ResponseEntity.ok(authenticationService.confirm(request));
+  public String confirm(@RequestBody ConfirmRequest request){
+    return authenticationService.confirm(request).toString();
   }
 
 

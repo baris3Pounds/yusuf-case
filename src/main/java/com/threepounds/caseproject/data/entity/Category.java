@@ -29,6 +29,10 @@ public class Category {
   @Column
   private boolean active;
 
+  @OneToMany(mappedBy = "category")
+  private List<Features> features;
+
+
   public Category() {
 
   }

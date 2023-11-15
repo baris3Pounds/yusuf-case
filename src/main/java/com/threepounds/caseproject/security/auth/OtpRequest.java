@@ -11,7 +11,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OtpRequest {
-    private UUID userId;
+    private UUID id;
+    private UUID user_id;
     private String otp;
     private boolean isUsed;
 }

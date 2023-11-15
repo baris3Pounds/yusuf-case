@@ -20,6 +20,8 @@ public class ValidationCode {
     @GeneratedValue
     private UUID id;
     @Column
+    private UUID user_id;
+    @Column
     private String otp;
     @Column
     private boolean isUsed;
