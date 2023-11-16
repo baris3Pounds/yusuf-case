@@ -34,7 +34,7 @@ public class FeaturesController {
     }
 
     @PostMapping("")
-    public ResponseEntity<FeaturesResource> create(@RequestBody FeaturesDto featuresDto){
+    public ResponseModel<FeaturesResource> create(@RequestBody FeaturesDto featuresDto){
         Features featuresToSave=featuresMapper.dtoToEntity(featuresDto);
         Category category= categoryService.getById(featuresDto.getCategoryId())
                 .orElseThrow(()->new IllegalArgumentException());
@@ -42,7 +42,7 @@ public class FeaturesController {
         savedFeature.setCategory(category);
         featuresService.save(savedFeature);
         FeaturesResource featuresResource = featuresMapper.featureToResource(savedFeature);
-        return ResponseEntity.ok(featuresResource);
+        return new ResponseModel<>(HttpStatus.OK.value(),featuresResource, null);
 
     }
     @CacheEvict(value = "features",key = "#id")

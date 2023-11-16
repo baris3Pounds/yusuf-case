@@ -16,8 +16,6 @@
             <column name="active" type="boolean"/>
         </createTable>
 
-
-
         <rollback>
             <dropTable tableName="users"/>
         </rollback>

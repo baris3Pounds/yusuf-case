@@ -1,12 +1,16 @@
 package com.threepounds.caseproject.data.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
 @Entity(name = "features")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Features {
     @Id
     @GeneratedValue
@@ -26,7 +30,5 @@ public class Features {
         this.title = title;
         this.active = active;
     }
-    public Features(){
 
-    }
 }
