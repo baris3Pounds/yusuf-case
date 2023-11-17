@@ -36,6 +36,7 @@
   <include file="classpath:db/changelog/db.changelog-0.1.7.xml" relativeToChangelogFile="false"/>
   <include file="classpath:db/changelog/db.changelog-0.1.8.xml" relativeToChangelogFile="false"/>
   <include file="classpath:db/changelog/db.changelog-0.1.9.xml" relativeToChangelogFile="false"/>
+  <include file="classpath:db/changelog/db.changelog-0.1.10.xml" relativeToChangelogFile="false"/>
 
 
 </databaseChangeLog>
