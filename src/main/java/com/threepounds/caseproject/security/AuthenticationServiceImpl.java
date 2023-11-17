@@ -37,7 +37,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   @Override
   public JwtAuthenticationResponse signup(SignUpRequest request) {
     User user = userMapper.userDtoToEntity(request);
-    user.setUserActive(false);
+    user.setActive(false);
     user.setPassword(passwordEncoder.encode(request.getPassword()));
     Role userRole = roleService.getByName("ROLE_USER")
         .orElseThrow(() -> new NotFoundException("Role not found"));
@@ -73,7 +73,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     if (validationCode.isPresent()) {
       User user = userRepository.findById(request.getUserId())
           .orElseThrow(() -> new NotFoundException("User not found."));
-      user.setUserActive(true);
+      user.setActive(true);
       userRepository.save(user);
       model.setStatusCode(HttpStatus.OK.value());
       model.setBody("User activated.");
