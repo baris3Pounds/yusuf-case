@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 
 import java.time.ZonedDateTime;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -19,6 +21,8 @@ import java.util.UUID;
 
 @Entity(name = "advert")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Advert {
 
   @Id
@@ -45,26 +49,5 @@ public class Advert {
   @ManyToOne
   @JoinColumn(name = "category_id",referencedColumnName = "id")
   private Category category;
-
-
-
-  public Advert() {
-
-  }
-
-
-
-  public Advert(UUID id, String title, String description, boolean active,
-      ZonedDateTime createdDate, BigDecimal price) {
-    this.id = id;
-    this.title = title;
-    this.description = description;
-    this.active = active;
-    this.createdDate = createdDate;
-    this.price = price;
-  }
-
-
-
 
 }

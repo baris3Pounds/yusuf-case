@@ -22,14 +22,14 @@
 
 
         <insert tableName="category">
-            <column name="id" value="b2a22fef-20da-475b-acf4-e4c1eb82358d"/>
+            <column name="id" value="c1a22fef-20da-475b-acf4-e4c1eb82358e"/>
             <column name="name" value="Elektronik"/>
             <column name="description" value="Elektronik Kategorisi"/>
             <column name="active" value="true"/>
         </insert>
 
         <insert tableName="category">
-            <column name="id" value="b2a22fef-20da-475b-acf4-e4c1eb82358e"/>
+            <column name="id" value="c2a22fef-20da-475b-acf4-e4c1eb82358e"/>
             <column name="name" value="Giyim"/>
             <column name="description" value="Giyim Kategorisi"/>
             <column name="active" value="true"/>

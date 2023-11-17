@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import java.util.UUID;
@@ -15,10 +16,10 @@ public class AdvertDto {
     private UUID id;
     private UUID categoryId;
     private String title;
-    private Date lastUpdated;
+    private ZonedDateTime lastUpdated;
     private String description;
     private boolean active;
-    private Date date;
+    private ZonedDateTime createdDate;
     private BigDecimal price;
 
 
