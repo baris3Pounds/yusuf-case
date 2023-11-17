@@ -76,5 +76,6 @@
             <dropTable tableName="users"/>
         </rollback>
 
+
     </changeSet>
 </databaseChangeLog>
