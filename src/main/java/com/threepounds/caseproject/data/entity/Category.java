@@ -9,10 +9,15 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import java.util.List;
 import java.util.UUID;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity(name = "category")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Category {
 
   @Id
@@ -32,15 +37,6 @@ public class Category {
 
 
 
-  public Category() {
 
-  }
-
-  public Category(UUID id, String name, String description, boolean active, List<Advert> advert) {
-    this.id = id;
-    this.name = name;
-    this.description = description;
-    this.active = active;
-  }
 
 }
