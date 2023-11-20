@@ -15,6 +15,8 @@ import java.util.*;
 
 import com.threepounds.caseproject.service.ValidationCodeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,6 +36,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   private final UserMapper userMapper;
   private final RoleService roleService;
 
+  private final RabbitTemplate rabbitTemplate;
+
+  private final Queue queue;
+
+
   @Override
   public JwtAuthenticationResponse signup(SignUpRequest request) {
     User user = userMapper.userDtoToEntity(request);
@@ -50,6 +57,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
     userRepository.save(user);
     var jwt = jwtService.generateToken(user.getUsername());
+
+    rabbitTemplate.convertAndSend(queue.getName(), user.getEmail());
+
     Random random = new Random();
     StringBuilder code = new StringBuilder();
     for (int i = 0; i < 4; i++) {
@@ -62,6 +72,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     validationCodeService.save(validationCode);
     return JwtAuthenticationResponse.builder().otp(code.toString()).token(jwt).build();
   }
+
 
   @Override
   public ResponseModel<String> confirm(ConfirmRequest request) {
