@@ -8,6 +8,8 @@ import com.threepounds.caseproject.data.entity.ValidationCode;
 import com.threepounds.caseproject.data.repository.UserRepository;
 import com.threepounds.caseproject.exceptions.EmailCheckException;
 import com.threepounds.caseproject.exceptions.NotFoundException;
+import com.threepounds.caseproject.messaging.model.Messages;
+import com.threepounds.caseproject.messaging.producer.RegistrationMessageProducer;
 import com.threepounds.caseproject.security.auth.*;
 import com.threepounds.caseproject.service.RoleService;
 
@@ -15,6 +17,7 @@ import java.util.*;
 
 import com.threepounds.caseproject.service.ValidationCodeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,6 +37,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   private final UserMapper userMapper;
   private final RoleService roleService;
 
+  private final RegistrationMessageProducer registrationMessageProducer;
+
   @Override
   public JwtAuthenticationResponse signup(SignUpRequest request) {
     User user = userMapper.userDtoToEntity(request);
@@ -49,6 +54,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
       throw new EmailCheckException("This email is already exist");
     }
     userRepository.save(user);
+
+    Messages message = Messages.builder().id(user.getId())
+            .name(user.getEmail())
+                .content("User registered.").build();
+
+    registrationMessageProducer.sendQueue(message);
+
     var jwt = jwtService.generateToken(user.getUsername());
     Random random = new Random();
     StringBuilder code = new StringBuilder();

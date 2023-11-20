@@ -1,5 +1,5 @@
-package com.threepounds.caseproject.rabbitmq.producer;
-import com.threepounds.caseproject.rabbitmq.model.Messages;
+package com.threepounds.caseproject.messaging.producer;
+import com.threepounds.caseproject.messaging.model.Messages;
 import jakarta.annotation.PostConstruct;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class MessageProducer {
+public class RegistrationMessageProducer {
 
     @Value("${spring.rabbitmq.template.routing-key}")
     private String routingName;
@@ -20,21 +20,13 @@ public class MessageProducer {
     private  String exchange;
     private final RabbitTemplate rabbitTemplate;
 
-    public MessageProducer(RabbitTemplate rabbitTemplate) {
+    public RegistrationMessageProducer(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
-        @PostConstruct
-        public void init(){
-        Messages messages=new Messages();
-        messages.setId(UUID.randomUUID());
-        messages.setName("advert");
-        messages.setContent("advert updated");
-        sendQueue(messages);
 
-    }
-    public void sendQueue(Messages messages){
+    public void sendQueue(Messages messages) {
         System.out.println(messages.getName());
-        rabbitTemplate.convertAndSend(exchange,routingName,messages);
+        rabbitTemplate.convertAndSend(exchange, routingName, messages);
     }
 
 

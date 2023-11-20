@@ -1,7 +1,5 @@
-package com.threepounds.caseproject.rabbitmq.rabbitMqConfiguration;
-import com.threepounds.caseproject.rabbitmq.model.Messages;
+package com.threepounds.caseproject.messaging.rabbitMqConfiguration;
 import org.springframework.amqp.core.*;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
