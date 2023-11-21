@@ -8,6 +8,8 @@ import com.threepounds.caseproject.data.entity.ValidationCode;
 import com.threepounds.caseproject.data.repository.UserRepository;
 import com.threepounds.caseproject.exceptions.EmailCheckException;
 import com.threepounds.caseproject.exceptions.NotFoundException;
+import com.threepounds.caseproject.messaging.model.Messages;
+import com.threepounds.caseproject.messaging.producer.RegistrationMessageProducer;
 import com.threepounds.caseproject.security.auth.*;
 import com.threepounds.caseproject.service.RoleService;
 
@@ -15,7 +17,6 @@ import java.util.*;
 
 import com.threepounds.caseproject.service.ValidationCodeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,10 +37,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   private final UserMapper userMapper;
   private final RoleService roleService;
 
-  private final RabbitTemplate rabbitTemplate;
-
-  private final Queue queue;
-
+  private final RegistrationMessageProducer registrationMessageProducer;
 
   @Override
   public JwtAuthenticationResponse signup(SignUpRequest request) {
@@ -56,10 +54,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
       throw new EmailCheckException("This email is already exist");
     }
     userRepository.save(user);
+
+    Messages message = Messages.builder().id(user.getId())
+            .name(user.getEmail())
+                .content("User registered.").build();
+
+    registrationMessageProducer.sendQueue(message);
+
     var jwt = jwtService.generateToken(user.getUsername());
-
-    rabbitTemplate.convertAndSend(queue.getName(), user.getEmail());
-
     Random random = new Random();
     StringBuilder code = new StringBuilder();
     for (int i = 0; i < 4; i++) {
@@ -72,7 +74,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     validationCodeService.save(validationCode);
     return JwtAuthenticationResponse.builder().otp(code.toString()).token(jwt).build();
   }
-
 
   @Override
   public ResponseModel<String> confirm(ConfirmRequest request) {
@@ -90,6 +91,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
       model.setBody("User activated.");
       validationCode.get().setUsed(true);
       validationCodeService.save(validationCode.get());
+      Messages message = Messages.builder().id(user.getId())
+              .name(user.getEmail())
+              .content("User activated.").build();
+
+      registrationMessageProducer.sendQueue(message);
     } else {
       model.setStatusCode(HttpStatus.BAD_REQUEST.value());
       model.setBody("Code or user invalid.");

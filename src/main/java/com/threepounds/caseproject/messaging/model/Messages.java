@@ -1,4 +1,4 @@
-package com.threepounds.caseproject.rabbitmq.model;
+package com.threepounds.caseproject.messaging.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
