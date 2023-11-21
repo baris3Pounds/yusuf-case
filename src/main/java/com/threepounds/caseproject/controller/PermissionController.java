@@ -2,11 +2,16 @@ package com.threepounds.caseproject.controller;
 
 import com.threepounds.caseproject.controller.dto.PermissionDto;
 import com.threepounds.caseproject.controller.mapper.PermissionMapper;
+import com.threepounds.caseproject.controller.resource.CategoryResource;
 import com.threepounds.caseproject.controller.resource.PermissionResource;
+import com.threepounds.caseproject.controller.response.ResponseModel;
+import com.threepounds.caseproject.data.entity.Category;
 import com.threepounds.caseproject.data.entity.Permission;
 import com.threepounds.caseproject.data.entity.Role;
 import com.threepounds.caseproject.service.PermissionService;
 import com.threepounds.caseproject.service.RoleService;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,5 +62,16 @@ public class PermissionController {
     public ResponseEntity<List<PermissionResource>> list(){
         List<PermissionResource> permissionResources=permissionMapper.entityToPermissionResource(permissionService.list());
         return ResponseEntity.ok(permissionResources);
+    }
+    @GetMapping("/page")
+    public ResponseModel<List<PermissionResource>> listByPage(@RequestParam int pageNumber, @RequestParam int pageSize) {
+
+        Page<Permission> permissions = permissionService.listByPage(pageNumber, pageSize);
+
+        List<PermissionResource> categoryResources = permissionMapper.entityToPermissionResource(
+                permissions.toList());
+
+        return new ResponseModel<>(HttpStatus.OK.value(), categoryResources, null,
+                (int) permissions.getTotalElements(), permissions.getTotalPages());
     }
 }

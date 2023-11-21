@@ -1,8 +1,12 @@
 package com.threepounds.caseproject.service;
 
+import com.threepounds.caseproject.data.entity.Category;
 import com.threepounds.caseproject.data.entity.Permission;
 import com.threepounds.caseproject.data.entity.Role;
 import com.threepounds.caseproject.data.repository.RoleRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,6 +37,11 @@ public class RoleService {
 
     public Optional <Role> getByName(String name){
         return roleRepository.findByName(name);
+    }
+    public Page<Role> listByPage(int pageNumber, int pageSize)
+    {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return roleRepository.findAll(pageable);
     }
 
 }

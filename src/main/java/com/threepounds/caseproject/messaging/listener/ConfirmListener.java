@@ -1,19 +1,13 @@
 package com.threepounds.caseproject.messaging.listener;
+
 import com.threepounds.caseproject.messaging.model.Messages;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.stereotype.Service;
 
-
-@Service
-public class RegisterListener {
+public class ConfirmListener {
     @RabbitListener(queues = "spring-boot-queue")
     public void handleMessage(Messages messages){
         System.out.println(messages.toString());
-        System.out.println("Register message received");
+        System.out.println("Confirm message received");
 
     }
- }
-
-
-
-
+}

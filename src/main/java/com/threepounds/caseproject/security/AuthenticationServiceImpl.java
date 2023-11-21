@@ -9,6 +9,7 @@ import com.threepounds.caseproject.data.repository.UserRepository;
 import com.threepounds.caseproject.exceptions.EmailCheckException;
 import com.threepounds.caseproject.exceptions.NotFoundException;
 import com.threepounds.caseproject.messaging.model.Messages;
+import com.threepounds.caseproject.messaging.producer.ConfirmProducer;
 import com.threepounds.caseproject.messaging.producer.RegistrationMessageProducer;
 import com.threepounds.caseproject.security.auth.*;
 import com.threepounds.caseproject.service.RoleService;
@@ -36,7 +37,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
   private final UserMapper userMapper;
   private final RoleService roleService;
-
+  private final ConfirmProducer confirmProducer;
   private final RegistrationMessageProducer registrationMessageProducer;
 
   @Override
@@ -95,7 +96,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
               .name(user.getEmail())
               .content("User activated.").build();
 
-      registrationMessageProducer.sendQueue(message);
+      confirmProducer.sendQueue(message);
     } else {
       model.setStatusCode(HttpStatus.BAD_REQUEST.value());
       model.setBody("Code or user invalid.");

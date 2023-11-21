@@ -1,11 +1,16 @@
 package com.threepounds.caseproject.controller;
 import com.threepounds.caseproject.controller.dto.UserDto;
 import com.threepounds.caseproject.controller.mapper.UserMapper;
+import com.threepounds.caseproject.controller.resource.CategoryResource;
 import com.threepounds.caseproject.controller.resource.UserResource;
+import com.threepounds.caseproject.controller.response.ResponseModel;
+import com.threepounds.caseproject.data.entity.Category;
 import com.threepounds.caseproject.data.entity.Role;
 import com.threepounds.caseproject.data.entity.User;
 import com.threepounds.caseproject.service.RoleService;
 import com.threepounds.caseproject.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -81,6 +86,17 @@ public class UserController {
         List<UserResource> userResources = userMapper.userDtoToList(
                 userService.list());
         return ResponseEntity.ok(userResources);
+    }
+    @GetMapping("/page")
+    public ResponseModel<List<UserResource>> listByPage(@RequestParam int pageNumber, @RequestParam int pageSize) {
+
+        Page<User> users = userService.listByPage(pageNumber, pageSize);
+
+        List<UserResource> categoryResources = userMapper.userDtoToList(
+                users.toList());
+
+        return new ResponseModel<>(HttpStatus.OK.value(), categoryResources, null,
+                (int) users.getTotalElements(), users.getTotalPages());
     }
 
 
