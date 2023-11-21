@@ -18,6 +18,7 @@ import java.util.UUID;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/api/v1/categories")
@@ -49,6 +51,18 @@ public class CategoryController {
     List<CategoryResource> categoryResources = categoryMapper.categoryDtoList(
             categoryService.list());
     return new ResponseModel<>(HttpStatus.OK.value(), categoryResources, null);
+  }
+
+  @GetMapping("/page")
+  public ResponseModel<List<CategoryResource>> listByPage(@RequestParam int pageNumber,@RequestParam int pageSize) {
+
+    Page<Category> categories = categoryService.listByPage(pageNumber, pageSize);
+
+    List<CategoryResource> categoryResources = categoryMapper.categoryDtoList(
+        categories.toList());
+
+    return new ResponseModel<>(HttpStatus.OK.value(), categoryResources, null,
+        (int) categories.getTotalElements(), categories.getTotalPages());
   }
 
   @PostMapping("")
