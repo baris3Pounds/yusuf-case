@@ -10,7 +10,20 @@ public class ResponseModel<T> {
 
   private String errorMessage;
 
+  private int totalElements;
+
+  private int totalPages;
+
   public ResponseModel() {
+  }
+
+  public ResponseModel(int statusCode, T body, String errorMessage, int totalElements,
+      int totalPages) {
+    this.statusCode = statusCode;
+    this.body = body;
+    this.errorMessage = errorMessage;
+    this.totalElements = totalElements;
+    this.totalPages = totalPages;
   }
 
   public ResponseModel(int statusCode, T body, String errorMessage) {
@@ -41,5 +54,21 @@ public class ResponseModel<T> {
 
   public void setErrorMessage(String errorMessage) {
     this.errorMessage = errorMessage;
+  }
+
+  public int getTotalElements() {
+    return totalElements;
+  }
+
+  public void setTotalElements(int totalElements) {
+    this.totalElements = totalElements;
+  }
+
+  public int getTotalPages() {
+    return totalPages;
+  }
+
+  public void setTotalPages(int totalPages) {
+    this.totalPages = totalPages;
   }
 }
