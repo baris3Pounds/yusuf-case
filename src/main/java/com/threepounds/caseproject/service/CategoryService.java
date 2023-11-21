@@ -7,6 +7,9 @@ import com.threepounds.caseproject.data.repository.CategoryRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,5 +38,12 @@ public class CategoryService {
   public void delete(UUID categoryId){
     repository.deleteById(categoryId);
   }
+
+  public Page<Category> listByPage(int pageNumber, int pageSize)
+  {
+    Pageable pageable = PageRequest.of(pageNumber, pageSize);
+    return repository.findAll(pageable);
+  }
+
 
 }
