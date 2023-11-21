@@ -5,6 +5,9 @@ import com.threepounds.caseproject.data.entity.Category;
 import com.threepounds.caseproject.data.entity.Features;
 import com.threepounds.caseproject.data.repository.FeaturesRepository;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,5 +36,10 @@ private final FeaturesRepository featuresRepository;
     }
     public List<Features> featuresByCategory(Category category){
         return featuresRepository.findByCategory(category);
+    }
+    public Page<Features> listByPage(int pageNumber, int pageSize)
+    {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return featuresRepository.findAll(pageable);
     }
 }

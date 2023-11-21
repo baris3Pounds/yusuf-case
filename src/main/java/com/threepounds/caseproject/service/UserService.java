@@ -1,8 +1,11 @@
 package com.threepounds.caseproject.service;
 
-import com.threepounds.caseproject.data.entity.Category;
+
 import com.threepounds.caseproject.data.entity.User;
 import com.threepounds.caseproject.data.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,5 +31,10 @@ public class UserService {
     }
     public List<User> list(){
         return userRepository.findAll();
+    }
+    public Page<User> listByPage(int pageNumber, int pageSize)
+    {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return userRepository.findAll(pageable);
     }
 }

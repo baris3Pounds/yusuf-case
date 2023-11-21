@@ -1,8 +1,12 @@
 package com.threepounds.caseproject.service;
 
+import com.threepounds.caseproject.data.entity.Category;
 import com.threepounds.caseproject.data.entity.Permission;
 import com.threepounds.caseproject.data.entity.Role;
 import com.threepounds.caseproject.data.repository.PermissionsRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,5 +38,10 @@ public class PermissionService {
     }
     public Optional <Permission> getByName(String name){
         return permissionsRepository.findByName(name);
+    }
+    public Page<Permission> listByPage(int pageNumber, int pageSize)
+    {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return permissionsRepository.findAll(pageable);
     }
 }

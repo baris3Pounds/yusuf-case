@@ -2,12 +2,17 @@ package com.threepounds.caseproject.controller;
 
 import com.threepounds.caseproject.controller.dto.RoleDto;
 import com.threepounds.caseproject.controller.mapper.RoleMapper;
+import com.threepounds.caseproject.controller.resource.CategoryResource;
 import com.threepounds.caseproject.controller.resource.RoleResource;
+import com.threepounds.caseproject.controller.response.ResponseModel;
+import com.threepounds.caseproject.data.entity.Category;
 import com.threepounds.caseproject.data.entity.Permission;
 import com.threepounds.caseproject.data.entity.Role;
 import com.threepounds.caseproject.service.PermissionService;
 import com.threepounds.caseproject.service.RoleService;
 import com.threepounds.caseproject.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -69,5 +74,16 @@ public class RoleController {
     public ResponseEntity<List<RoleResource>> list(){
         List<RoleResource> roleResources=roleMapper.roleDtoToList(roleService.getRoles());
         return ResponseEntity.ok(roleResources);
+    }
+    @GetMapping("/page")
+    public ResponseModel<List<RoleResource>> listByPage(@RequestParam int pageNumber, @RequestParam int pageSize) {
+
+        Page<Role> roles = roleService.listByPage(pageNumber, pageSize);
+
+        List<RoleResource> categoryResources = roleMapper.roleDtoToList(
+                roles.toList());
+
+        return new ResponseModel<>(HttpStatus.OK.value(), categoryResources, null,
+                (int) roles.getTotalElements(), roles.getTotalPages());
     }
 }

@@ -2,6 +2,7 @@ package com.threepounds.caseproject.controller;
 
 import com.threepounds.caseproject.controller.dto.FeaturesDto;
 import com.threepounds.caseproject.controller.mapper.FeaturesMapper;
+import com.threepounds.caseproject.controller.resource.CategoryResource;
 import com.threepounds.caseproject.controller.resource.FeaturesResource;
 import com.threepounds.caseproject.controller.response.ResponseModel;
 import com.threepounds.caseproject.data.entity.Category;
@@ -13,6 +14,7 @@ import com.threepounds.caseproject.service.FeaturesService;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -79,6 +81,17 @@ public class FeaturesController {
         List<FeaturesResource> featuresResources = featuresMapper.featuresToResourceList(
             featuresService.getAllFeatures());
         return new ResponseModel(HttpStatus.OK.value(),featuresResources, null);
+    }
+    @GetMapping("/page")
+    public ResponseModel<List<FeaturesResource>> listByPage(@RequestParam int pageNumber, @RequestParam int pageSize) {
+
+        Page<Features> features = featuresService.listByPage(pageNumber, pageSize);
+
+        List<FeaturesResource> featuresResources= featuresMapper.featuresToResourceList(
+                features.toList());
+
+        return new ResponseModel<>(HttpStatus.OK.value(), featuresResources, null,
+                (int) features.getTotalElements(), features.getTotalPages());
     }
 
 
