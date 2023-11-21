@@ -91,6 +91,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
       model.setBody("User activated.");
       validationCode.get().setUsed(true);
       validationCodeService.save(validationCode.get());
+      Messages message = Messages.builder().id(user.getId())
+              .name(user.getEmail())
+              .content("User activated.").build();
+
+      registrationMessageProducer.sendQueue(message);
     } else {
       model.setStatusCode(HttpStatus.BAD_REQUEST.value());
       model.setBody("Code or user invalid.");
