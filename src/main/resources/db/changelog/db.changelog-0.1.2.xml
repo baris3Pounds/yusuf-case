@@ -21,7 +21,7 @@
             <column name="active" type="boolean"/>
             <column name="created_date" type="${timestamp_type}"/>
             <column name="last_updated" type="${timestamp_type}"/>
-            <column name="price" type="DECIMAL(10, 2)"/>
+            <column name="price" type="DECIMAL(5, 2)"/>
             <column name="category_id" type="${uuid_type}"/>
         </createTable>
 

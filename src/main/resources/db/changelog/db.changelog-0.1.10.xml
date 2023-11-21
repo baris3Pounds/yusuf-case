@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="1" author="bariskantar">
+        <modifyDataType
+          columnName="price"
+          newDataType="DECIMAL(10, 2)"
+          tableName="advert"/>
+
+        <insert tableName="advert">
+            <column name="id" value="a1a22fef-20da-475b-acf4-e4c1eb82358e"/>
+            <column name="title" value="Tablet"/>
+            <column name="description" value="4 kameralı, renk çeşitliliği"/>
+            <column name="active" value="true"/>
+            <column name="price" value="13549.95"/>
+            <column name="category_id" value="c1a22fef-20da-475b-acf4-e4c1eb82358e"/>
+
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
