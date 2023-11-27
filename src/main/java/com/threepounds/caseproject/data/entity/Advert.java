@@ -36,6 +36,8 @@ public class Advert {
   @Column
   private boolean active;
   @Column
+  private String tags;
+  @Column
   @CreationTimestamp
   private ZonedDateTime createdDate;
 
@@ -49,5 +51,10 @@ public class Advert {
   @ManyToOne
   @JoinColumn(name = "category_id",referencedColumnName = "id")
   private Category category;
+
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "tags", referencedColumnName = "id")
+  private AdvertTag advertTag;
+
 
 }
