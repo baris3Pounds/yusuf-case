@@ -22,7 +22,7 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
+
     <dependency>
       <groupId>redis.clients</groupId>
       <artifactId>jedis</artifactId>
@@ -32,6 +32,18 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-amqp</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-elasticsearch</artifactId>
+      <version>5.2.0</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.elasticsearch/elasticsearch -->
+    <dependency>
+      <groupId>org.elasticsearch</groupId>
+      <artifactId>elasticsearch</artifactId>
+      <version>8.11.1</version>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis -->

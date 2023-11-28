@@ -23,7 +23,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-//@Document(indexName = "advert", shards = -1, replicas = 0, refreshInterval = "-1") bu annotation elasticsearch için tag sınıfına eklenmeli.
+
 public class Advert {
 
   @Id
@@ -36,8 +36,6 @@ public class Advert {
   private String description;
   @Column
   private boolean active;
-  @Column
-  private String tags;
   @Column
   @CreationTimestamp
   private ZonedDateTime createdDate;
@@ -53,9 +51,7 @@ public class Advert {
   @JoinColumn(name = "category_id",referencedColumnName = "id")
   private Category category;
 
-  @ManyToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "tags", referencedColumnName = "id")
-  private AdvertTag advertTag;
+
 
 
 }

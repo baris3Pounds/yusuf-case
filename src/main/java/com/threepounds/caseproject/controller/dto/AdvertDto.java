@@ -19,7 +19,7 @@ public class AdvertDto {
     private ZonedDateTime lastUpdated;
     private String description;
     private boolean active;
-    private String tags;
+    private UUID tagId;
     private ZonedDateTime createdDate;
     private BigDecimal price;
 
