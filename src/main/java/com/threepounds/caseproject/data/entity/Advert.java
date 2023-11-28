@@ -23,6 +23,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+//@Document(indexName = "advert", shards = -1, replicas = 0, refreshInterval = "-1") bu annotation elasticsearch için tag sınıfına eklenmeli.
 public class Advert {
 
   @Id
