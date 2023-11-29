@@ -33,7 +33,6 @@ public class AdvertTag {
     @ElementCollection
     private List<String> tags = new ArrayList<>();
 
-
     @ManyToOne
     @JoinColumn(name = "advert_id", referencedColumnName = "id")
     private Advert advert;
