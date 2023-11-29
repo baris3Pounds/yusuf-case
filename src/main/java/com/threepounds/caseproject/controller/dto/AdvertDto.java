@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
+import java.util.List;
 import java.util.UUID;
 @Data
 @NoArgsConstructor
@@ -19,7 +20,7 @@ public class AdvertDto {
     private ZonedDateTime lastUpdated;
     private String description;
     private boolean active;
-    private String tags;
+    private List<String> tags;
     private ZonedDateTime createdDate;
     private BigDecimal price;
 

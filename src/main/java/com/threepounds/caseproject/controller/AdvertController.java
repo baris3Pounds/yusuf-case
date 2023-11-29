@@ -3,9 +3,9 @@ package com.threepounds.caseproject.controller;
 import com.threepounds.caseproject.controller.dto.AdvertDto;
 import com.threepounds.caseproject.controller.mapper.AdvertMapper;
 import com.threepounds.caseproject.controller.resource.AdvertResource;
-import com.threepounds.caseproject.controller.resource.CategoryResource;
 import com.threepounds.caseproject.controller.response.ResponseModel;
 import com.threepounds.caseproject.data.entity.Advert;
+import com.threepounds.caseproject.data.entity.AdvertTag;
 import com.threepounds.caseproject.data.entity.Category;
 import com.threepounds.caseproject.exceptions.NotFoundException;
 import com.threepounds.caseproject.service.AdvertService;
@@ -26,15 +26,17 @@ import org.springframework.web.bind.annotation.*;
 public class AdvertController {
     private final AdvertService advertService;
     private final AdvertMapper advertMapper;
+    private final AdvertTag advertTag;
 
     private final CategoryService categoryService;
 
 
 
     public AdvertController(AdvertService advertService, AdvertMapper advertMapper,
-        CategoryService categoryService) {
+                            AdvertTag advertTag, CategoryService categoryService) {
         this.advertService = advertService;
         this.advertMapper = advertMapper;
+        this.advertTag = advertTag;
 
         this.categoryService = categoryService;
     }
@@ -44,6 +46,9 @@ public class AdvertController {
         Category category = categoryService.getById(advertDto.getCategoryId())
             .orElseThrow(()-> new IllegalArgumentException());
         Advert savedAdvert=advertService.save(advertToSave);
+        AdvertTag advertTag1=new AdvertTag();
+        advertTag1.setAdvertId(savedAdvert.getId());
+        advertTag1.setTags(savedAdvert.getAdvertTag().getTags());
         savedAdvert.setCategory(category);
         advertService.save(savedAdvert);
         AdvertResource advertResource=advertMapper.entityToAdvertResource(savedAdvert);

@@ -36,8 +36,6 @@ public class Advert {
   @Column
   private boolean active;
   @Column
-  private String tags;
-  @Column
   @CreationTimestamp
   private ZonedDateTime createdDate;
 
