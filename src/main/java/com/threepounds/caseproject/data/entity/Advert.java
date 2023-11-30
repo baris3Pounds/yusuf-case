@@ -50,4 +50,9 @@ public class Advert {
   @JoinColumn(name = "category_id",referencedColumnName = "id")
   private Category category;
 
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "tags", referencedColumnName = "id")
+  private AdvertTag advertTag;
+
+
 }

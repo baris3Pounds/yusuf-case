@@ -6,6 +6,7 @@ import com.threepounds.caseproject.controller.resource.AdvertResource;
 import com.threepounds.caseproject.controller.resource.CategoryResource;
 import com.threepounds.caseproject.controller.response.ResponseModel;
 import com.threepounds.caseproject.data.entity.Advert;
+import com.threepounds.caseproject.data.entity.AdvertTag;
 import com.threepounds.caseproject.data.entity.Category;
 import com.threepounds.caseproject.exceptions.NotFoundException;
 import com.threepounds.caseproject.service.AdvertService;
@@ -32,7 +33,7 @@ public class AdvertController {
 
 
     public AdvertController(AdvertService advertService, AdvertMapper advertMapper,
-        CategoryService categoryService) {
+                            CategoryService categoryService) {
         this.advertService = advertService;
         this.advertMapper = advertMapper;
 
@@ -41,8 +42,11 @@ public class AdvertController {
     @PostMapping("")
     public ResponseModel<AdvertResource> createAdvert(@RequestBody AdvertDto advertDto){
         Advert advertToSave= advertMapper.advertDtoToEntity(advertDto);
+        AdvertTag advertTag= new AdvertTag();
+        advertTag.setTags(advertToSave.getAdvertTag().getTags());
+        advertTag.setAdvert(advertToSave);
         Category category = categoryService.getById(advertDto.getCategoryId())
-            .orElseThrow(()-> new IllegalArgumentException());
+                .orElseThrow(()-> new IllegalArgumentException());
         Advert savedAdvert=advertService.save(advertToSave);
         savedAdvert.setCategory(category);
         advertService.save(savedAdvert);
@@ -53,13 +57,13 @@ public class AdvertController {
     @DeleteMapping("{id}")
     @CacheEvict(value = "advert",key = "#id")
     public ResponseEntity<String> delete(@PathVariable UUID id){
-         advertService.delete(id);
+        advertService.delete(id);
         return ResponseEntity.ok("success");
     }
     @GetMapping("{id}")
     @Cacheable(value = "advert",key = "#id")
     public ResponseModel<AdvertResource> getOneAdvert(@PathVariable UUID id){
-       Advert advert= advertService.getById(id)
+        Advert advert= advertService.getById(id)
                 .orElseThrow(()-> new IllegalArgumentException() );
         AdvertResource advertResource = advertMapper.entityToAdvertResource(advert);
         return new ResponseModel<>(HttpStatus.OK.value(),advertResource,null);
@@ -85,7 +89,7 @@ public class AdvertController {
     @GetMapping("/category/{id}")
     public ResponseModel getCategoryWithAdvert(@PathVariable UUID id) {
         Category category = categoryService.getById(id)
-            .orElseThrow(() -> new NotFoundException("Category not found"));
+                .orElseThrow(() -> new NotFoundException("Category not found"));
 
         List<Advert> adverts = advertService.advertsByCategory(category);
         List<AdvertResource> advertResources = advertMapper.entityToAdvertResource(adverts);
@@ -105,4 +109,4 @@ public class AdvertController {
     }
 
 
- }
+}
