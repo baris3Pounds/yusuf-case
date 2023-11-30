@@ -1,5 +1,7 @@
 package com.threepounds.caseproject.controller.dto;
 
+import com.threepounds.caseproject.data.entity.AdvertTag;
+import com.threepounds.caseproject.data.entity.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +25,7 @@ public class AdvertDto {
     private List<String> tags;
     private ZonedDateTime createdDate;
     private BigDecimal price;
+    private List<AdvertTag> advertTags;
 
 
 
