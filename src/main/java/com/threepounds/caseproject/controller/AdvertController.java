@@ -3,16 +3,20 @@ package com.threepounds.caseproject.controller;
 import com.threepounds.caseproject.controller.dto.AdvertDto;
 import com.threepounds.caseproject.controller.mapper.AdvertMapper;
 import com.threepounds.caseproject.controller.resource.AdvertResource;
-import com.threepounds.caseproject.controller.resource.CategoryResource;
 import com.threepounds.caseproject.controller.response.ResponseModel;
 import com.threepounds.caseproject.data.entity.Advert;
+import com.threepounds.caseproject.data.entity.AdvertTag;
 import com.threepounds.caseproject.data.entity.Category;
+import com.threepounds.caseproject.data.entity.Tag;
 import com.threepounds.caseproject.exceptions.NotFoundException;
 import com.threepounds.caseproject.service.AdvertService;
 import com.threepounds.caseproject.service.CategoryService;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.threepounds.caseproject.service.TagService;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -26,15 +30,16 @@ import org.springframework.web.bind.annotation.*;
 public class AdvertController {
     private final AdvertService advertService;
     private final AdvertMapper advertMapper;
-
+    private final TagService tagService;
     private final CategoryService categoryService;
 
 
 
     public AdvertController(AdvertService advertService, AdvertMapper advertMapper,
-        CategoryService categoryService) {
+                            TagService tagService, CategoryService categoryService) {
         this.advertService = advertService;
         this.advertMapper = advertMapper;
+        this.tagService = tagService;
 
         this.categoryService = categoryService;
     }
@@ -46,6 +51,9 @@ public class AdvertController {
         Advert savedAdvert=advertService.save(advertToSave);
         savedAdvert.setCategory(category);
         advertService.save(savedAdvert);
+        Tag tag=new Tag();
+        tag.setAdvert(savedAdvert);
+        tagService.save(tag);
         AdvertResource advertResource=advertMapper.entityToAdvertResource(savedAdvert);
         return new ResponseModel<>(HttpStatus.OK.value(),advertResource, null);
 

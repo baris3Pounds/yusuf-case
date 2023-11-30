@@ -1,41 +1,27 @@
 package com.threepounds.caseproject.data.entity;
-
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
-
-import java.math.BigDecimal;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
-@Entity(name = "tags")
+
+@Document(indexName = "tag")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
-public class AdvertTag {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Tag {
     @Id
-    @Column
-    @GeneratedValue
-    private UUID id;
-    @ElementCollection
-    private List<String> tags = new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name = "advert_id", referencedColumnName = "id")
+    private String id;
+    @Field(name = "advert",type = FieldType.Object)
     private Advert advert;
-
-
-
-
+    @Field(name = "advert_tags",type = FieldType.Nested,includeInParent = true)
+    private List<AdvertTag> tags=new ArrayList<>();
 }
-
