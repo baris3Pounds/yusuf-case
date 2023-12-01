@@ -1,6 +1,6 @@
 package com.threepounds.caseproject.service;
 
-import com.threepounds.caseproject.data.entity.AdvertTag;
+import com.threepounds.caseproject.data.entity.Tag;
 import com.threepounds.caseproject.data.repository.AdvertTagRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +14,13 @@ public class AdvertTagService {
         this.advertTagRepository = advertTagRepository;
     }
 
-    public List<AdvertTag> getAllAdvert(){
-        return advertTagRepository.findAll();
+    public Tag save(Tag tag){
+        return advertTagRepository.save(tag);
     }
 
+    public List<Tag> getAllTags(){
+        return advertTagRepository.findAll();
+    }
 
 
 }

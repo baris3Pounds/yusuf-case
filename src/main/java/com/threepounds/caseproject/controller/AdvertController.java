@@ -3,17 +3,20 @@ package com.threepounds.caseproject.controller;
 import com.threepounds.caseproject.controller.dto.AdvertDto;
 import com.threepounds.caseproject.controller.mapper.AdvertMapper;
 import com.threepounds.caseproject.controller.resource.AdvertResource;
-import com.threepounds.caseproject.controller.resource.CategoryResource;
 import com.threepounds.caseproject.controller.response.ResponseModel;
 import com.threepounds.caseproject.data.entity.Advert;
-import com.threepounds.caseproject.data.entity.AdvertTag;
+import com.threepounds.caseproject.data.entity.Tag;
 import com.threepounds.caseproject.data.entity.Category;
 import com.threepounds.caseproject.exceptions.NotFoundException;
 import com.threepounds.caseproject.service.AdvertService;
+import com.threepounds.caseproject.service.AdvertTagService;
 import com.threepounds.caseproject.service.CategoryService;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -22,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/advert")
 public class AdvertController {
@@ -30,29 +34,49 @@ public class AdvertController {
 
     private final CategoryService categoryService;
 
+    private final AdvertTagService advertTagService;
+
 
 
     public AdvertController(AdvertService advertService, AdvertMapper advertMapper,
-                            CategoryService categoryService) {
+                            CategoryService categoryService, AdvertTagService advertTagService) {
         this.advertService = advertService;
         this.advertMapper = advertMapper;
 
         this.categoryService = categoryService;
+        this.advertTagService = advertTagService;
     }
     @PostMapping("")
     public ResponseModel<AdvertResource> createAdvert(@RequestBody AdvertDto advertDto){
         Advert advertToSave= advertMapper.advertDtoToEntity(advertDto);
-        AdvertTag advertTag= new AdvertTag();
-        advertTag.setTags(advertToSave.getAdvertTag().getTags());
-        advertTag.setAdvert(advertToSave);
-        Category category = categoryService.getById(advertDto.getCategoryId())
-                .orElseThrow(()-> new IllegalArgumentException());
-        Advert savedAdvert=advertService.save(advertToSave);
-        savedAdvert.setCategory(category);
-        advertService.save(savedAdvert);
-        AdvertResource advertResource=advertMapper.entityToAdvertResource(savedAdvert);
-        return new ResponseModel<>(HttpStatus.OK.value(),advertResource, null);
+        advertService.save(advertToSave);
+        List<Tag> tags = new ArrayList<>();
+        advertDto.getTags().forEach(t->{
+            Tag tag = new Tag();
+            tag.setTag(t);
+            tag.setAdvert(advertToSave);
+            tags.add(tag);
+            advertTagService.save(tag);
+        });
 
+        try {
+            advertToSave.setTag(tags);
+
+            Category category = categoryService.getById(advertDto.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException());
+            Advert savedAdvert = advertService.save(advertToSave);
+            savedAdvert.setCategory(category);
+            advertService.save(savedAdvert);
+            AdvertResource advertResource = advertMapper.entityToAdvertResource(savedAdvert);
+
+            advertResource.setTags(savedAdvert.getTag().stream().map(Tag::getTag).collect(Collectors.toList()));
+
+            return new ResponseModel<>(HttpStatus.OK.value(), advertResource, null);
+        }
+        catch (Exception e){
+            log.error("Error",e);
+        }
+        return new ResponseModel<>(HttpStatus.OK.value(), null, null);
     }
     @DeleteMapping("{id}")
     @CacheEvict(value = "advert",key = "#id")
