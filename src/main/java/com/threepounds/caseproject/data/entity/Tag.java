@@ -3,24 +3,22 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "tags")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdvertTag {
+public class Tag {
     @Id
     @Column
     @GeneratedValue
     private UUID id;
-    @ElementCollection
-    private List<String> tags = new ArrayList<>();
 
+    @Column
+    private String tag;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "advert_id", referencedColumnName = "tags")
+    @ManyToOne
+    @JoinColumn(name = "advert_id", referencedColumnName = "id")
     private Advert advert;
 }
