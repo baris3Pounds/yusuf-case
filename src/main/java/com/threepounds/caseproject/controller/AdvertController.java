@@ -1,10 +1,12 @@
 package com.threepounds.caseproject.controller;
 
 import com.threepounds.caseproject.controller.dto.AdvertDto;
+import com.threepounds.caseproject.controller.dto.EsDto;
 import com.threepounds.caseproject.controller.mapper.AdvertMapper;
 import com.threepounds.caseproject.controller.resource.AdvertResource;
 import com.threepounds.caseproject.controller.response.ResponseModel;
 import com.threepounds.caseproject.data.entity.Advert;
+import com.threepounds.caseproject.data.entity.ESTag;
 import com.threepounds.caseproject.data.entity.Tag;
 import com.threepounds.caseproject.data.entity.Category;
 import com.threepounds.caseproject.exceptions.NotFoundException;
@@ -16,6 +18,8 @@ import java.util.List;
 import java.util.UUID;
 
 import java.util.stream.Collectors;
+
+import com.threepounds.caseproject.service.TagService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -35,42 +39,46 @@ public class AdvertController {
     private final CategoryService categoryService;
 
     private final AdvertTagService advertTagService;
+    private final TagService tagService;
 
 
 
     public AdvertController(AdvertService advertService, AdvertMapper advertMapper,
-                            CategoryService categoryService, AdvertTagService advertTagService) {
+                            CategoryService categoryService, AdvertTagService advertTagService, TagService tagService) {
         this.advertService = advertService;
         this.advertMapper = advertMapper;
-
         this.categoryService = categoryService;
         this.advertTagService = advertTagService;
+        this.tagService = tagService;
     }
     @PostMapping("")
     public ResponseModel<AdvertResource> createAdvert(@RequestBody AdvertDto advertDto){
         Advert advertToSave= advertMapper.advertDtoToEntity(advertDto);
+
         advertService.save(advertToSave);
         List<Tag> tags = new ArrayList<>();
+        List<ESTag> esTags=new ArrayList<>();
         advertDto.getTags().forEach(t->{
             Tag tag = new Tag();
             tag.setTag(t);
             tag.setAdvert(advertToSave);
             tags.add(tag);
             advertTagService.save(tag);
+           ESTag esTag=new ESTag();
+           esTag.setTag(t);
+           esTags.add(esTag);
+           tagService.save(esTag);
         });
 
         try {
             advertToSave.setTag(tags);
-
             Category category = categoryService.getById(advertDto.getCategoryId())
                 .orElseThrow(() -> new IllegalArgumentException());
             Advert savedAdvert = advertService.save(advertToSave);
             savedAdvert.setCategory(category);
             advertService.save(savedAdvert);
             AdvertResource advertResource = advertMapper.entityToAdvertResource(savedAdvert);
-
             advertResource.setTags(savedAdvert.getTag().stream().map(Tag::getTag).collect(Collectors.toList()));
-
             return new ResponseModel<>(HttpStatus.OK.value(), advertResource, null);
         }
         catch (Exception e){
@@ -106,8 +114,8 @@ public class AdvertController {
     }
     @GetMapping("")
     public ResponseEntity<List<AdvertResource>> list(){
-        List<AdvertResource> advertResource=advertMapper.entityToAdvertResource(advertService.getAllAdvert());
-        return ResponseEntity.ok(advertResource);
+        List<AdvertResource> advertResources=advertMapper.entityToAdvertResource(advertService.getAllAdvert());
+        return ResponseEntity.ok(advertResources);
     }
 
     @GetMapping("/category/{id}")
@@ -130,6 +138,15 @@ public class AdvertController {
 
         return new ResponseModel<>(HttpStatus.OK.value(), advertResources, null,
                 (int) adverts.getTotalElements(), adverts.getTotalPages());
+    }
+    @GetMapping("/es")
+    public ResponseEntity<Iterable<ESTag>> getAll(){
+        Iterable<ESTag> esTags=tagService.getAllTags();
+        return ResponseEntity.ok(esTags);
+    }
+    @GetMapping("/es/search")
+    public List<ESTag> searchAdvertWithTag(@RequestBody EsDto esDto){
+        return tagService.searchAdvert(esDto);
     }
 
 
