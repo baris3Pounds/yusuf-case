@@ -9,6 +9,5 @@ import java.util.List;
 
 @Repository
 public interface ESTagRepository extends ElasticsearchRepository<ESTag,String> {
-    @Query("{\"bool\": {\"must\": [{\"match\": {\"advert.title\": \"siyah kol saati\"}}]}}")
-    List<ESTag> customQuery (String name);
+    List<ESTag> findByTag(String tag);
 }

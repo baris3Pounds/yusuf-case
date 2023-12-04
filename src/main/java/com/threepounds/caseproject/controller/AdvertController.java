@@ -65,6 +65,7 @@ public class AdvertController {
             tags.add(tag);
             advertTagService.save(tag);
            ESTag esTag=new ESTag();
+           esTag.setAdvert(advertToSave);
            esTag.setTag(t);
            esTags.add(esTag);
            tagService.save(esTag);
@@ -144,7 +145,7 @@ public class AdvertController {
         Iterable<ESTag> esTags=tagService.getAllTags();
         return ResponseEntity.ok(esTags);
     }
-    @GetMapping("/es/search")
+    @PostMapping("/es/search")
     public List<ESTag> searchAdvertWithTag(@RequestBody EsDto esDto){
         return tagService.searchAdvert(esDto);
     }

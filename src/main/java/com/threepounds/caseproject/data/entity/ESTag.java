@@ -18,7 +18,11 @@ import java.util.UUID;
 public class ESTag{
     @Id
     private String id;
-    @Field(name = "tags",type = FieldType.Text)
-    private String Tag;
+
+    @Field(name = "tag",type = FieldType.Text)
+    private String tag;
+
+    @Field(name = "advert",type = FieldType.Object)
+    private Advert advert;
 
 }

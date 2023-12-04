@@ -38,18 +38,25 @@ public class TagService {
         return esTagRepository.findAll();
     }
     public List<ESTag> searchAdvert(EsDto esDto){
-        Supplier<Query> query=ESUtil.buildQuery(esDto.getFieldName().get(0),
-                esDto.getSearchValue().get(0));
+        Supplier<Query> query=ESUtil.buildQuery("tags",
+                esDto.getKeyword());
 
       log.info("Elasticsearch Query{}",query.toString());
       SearchResponse<ESTag> response=null;
       try{
-          response=elasticsearchClient.search(q->q.index("tag").query(query.get()),ESTag.class);
-      }catch (IOException e){
+//          response=elasticsearchClient.search(q->q.index("tag").query(query.get()),ESTag.class);
+//        response = elasticsearchClient.search(s -> s
+//            .index("tag")
+//            .query(q -> q
+//                .match(t -> t
+//                    .field("tags")
+//                    .query(esDto.getKeyword()))), ESTag.class);
+        List<ESTag> tags = esTagRepository.findByTag(esDto.getKeyword());
+        return tags;
+      }catch (Exception e){
+        log.error("Error",e);
           throw new RuntimeException(e);
       }
-      log.info("Elasticsearch response{}",response);
-        return  ex(response);
     }
     public List<ESTag> ex(SearchResponse<ESTag> response){
         return response.hits().hits().stream().map(Hit::source).collect(Collectors.toList());

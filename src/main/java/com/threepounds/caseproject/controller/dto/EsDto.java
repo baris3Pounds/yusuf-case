@@ -12,6 +12,5 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class EsDto {
-    private List<String> fieldName;
-    private List<String> searchValue;
+    private String keyword;
 }
