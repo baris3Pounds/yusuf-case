@@ -1,6 +1,7 @@
 package com.threepounds.caseproject.controller.dto;
 
 
+import com.threepounds.caseproject.data.entity.ESTag;
 import com.threepounds.caseproject.data.entity.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Data;

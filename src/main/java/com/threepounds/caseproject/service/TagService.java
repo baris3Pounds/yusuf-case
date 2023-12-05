@@ -4,14 +4,11 @@ import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.threepounds.caseproject.controller.dto.EsDto;
-import com.threepounds.caseproject.data.entity.Advert;
 import com.threepounds.caseproject.data.entity.ESTag;
 import com.threepounds.caseproject.data.repository.ESTagRepository;
 import com.threepounds.caseproject.util.ESUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -57,8 +54,5 @@ public class TagService {
         log.error("Error",e);
           throw new RuntimeException(e);
       }
-    }
-    public List<ESTag> ex(SearchResponse<ESTag> response){
-        return response.hits().hits().stream().map(Hit::source).collect(Collectors.toList());
     }
 }

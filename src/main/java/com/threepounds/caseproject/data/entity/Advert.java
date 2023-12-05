@@ -34,7 +34,6 @@ public class Advert {
   @Column
   @CreationTimestamp
   private ZonedDateTime createdDate;
-
   @Column
   @UpdateTimestamp
   private ZonedDateTime lastUpdated;
@@ -48,6 +47,7 @@ public class Advert {
 
   @OneToMany
   private List<Tag> tag;
+
 
 
 }

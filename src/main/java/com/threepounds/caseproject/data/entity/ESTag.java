@@ -1,5 +1,6 @@
 package com.threepounds.caseproject.data.entity;
 
+import co.elastic.clients.util.DateTime;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +10,9 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.Setting;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.UUID;
 
 @Document(indexName = "tag")
@@ -22,7 +26,8 @@ public class ESTag{
     @Field(name = "tag",type = FieldType.Text)
     private String tag;
 
-    @Field(name = "advert",type = FieldType.Object)
+    @Field(name = "advert",type = FieldType.Nested)
     private Advert advert;
+
 
 }
