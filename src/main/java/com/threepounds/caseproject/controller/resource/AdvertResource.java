@@ -2,6 +2,8 @@ package com.threepounds.caseproject.controller.resource;
 
 import com.threepounds.caseproject.data.entity.Category;
 import java.util.List;
+
+import com.threepounds.caseproject.data.entity.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

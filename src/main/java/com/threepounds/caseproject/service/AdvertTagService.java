@@ -1,25 +1,25 @@
 package com.threepounds.caseproject.service;
 
 import com.threepounds.caseproject.data.entity.Tag;
-import com.threepounds.caseproject.data.repository.AdvertTagRepository;
+import com.threepounds.caseproject.data.repository.TagRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
 public class AdvertTagService {
 
-    private final AdvertTagRepository advertTagRepository;
+    private final TagRepository tagRepository;
 
-    public AdvertTagService(AdvertTagRepository advertTagRepository) {
-        this.advertTagRepository = advertTagRepository;
+    public AdvertTagService(TagRepository tagRepository) {
+        this.tagRepository = tagRepository;
     }
 
     public Tag save(Tag tag){
-        return advertTagRepository.save(tag);
+        return tagRepository.save(tag);
     }
 
     public List<Tag> getAllTags(){
-        return advertTagRepository.findAll();
+        return tagRepository.findAll();
     }
 
 
