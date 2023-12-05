@@ -13,6 +13,9 @@ import com.threepounds.caseproject.exceptions.NotFoundException;
 import com.threepounds.caseproject.service.AdvertService;
 import com.threepounds.caseproject.service.AdvertTagService;
 import com.threepounds.caseproject.service.CategoryService;
+
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -54,7 +57,6 @@ public class AdvertController {
     @PostMapping("")
     public ResponseModel<AdvertResource> createAdvert(@RequestBody AdvertDto advertDto){
         Advert advertToSave= advertMapper.advertDtoToEntity(advertDto);
-
         advertService.save(advertToSave);
         List<Tag> tags = new ArrayList<>();
         List<ESTag> esTags=new ArrayList<>();
@@ -68,7 +70,10 @@ public class AdvertController {
            esTag.setAdvert(advertToSave);
            esTag.setTag(t);
            esTags.add(esTag);
+           DateTimeFormatter dateTimeFormatter=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+           esTags.stream().map((s)->s.getAdvert().setCreatedDate(s.getAdvert().getCreatedDate().format(dateTimeFormatter)));
            tagService.save(esTag);
+
         });
 
         try {
@@ -141,13 +146,14 @@ public class AdvertController {
                 (int) adverts.getTotalElements(), adverts.getTotalPages());
     }
     @GetMapping("/es")
-    public ResponseEntity<Iterable<ESTag>> getAll(){
+    public ResponseModel<Iterable<ESTag>> getAll(){
         Iterable<ESTag> esTags=tagService.getAllTags();
-        return ResponseEntity.ok(esTags);
+        return new ResponseModel<>(HttpStatus.OK.value(),esTags,null);
     }
     @PostMapping("/es/search")
-    public List<ESTag> searchAdvertWithTag(@RequestBody EsDto esDto){
-        return tagService.searchAdvert(esDto);
+    public  ResponseModel<List<ESTag>> searchAdvertWithTag(@RequestBody EsDto esDto){
+              List<ESTag>esTags= tagService.searchAdvert(esDto);
+        return new ResponseModel<>(HttpStatus.OK.value(),esTags,null);
     }
 
 
