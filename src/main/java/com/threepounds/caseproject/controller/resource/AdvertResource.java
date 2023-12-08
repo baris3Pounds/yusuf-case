@@ -27,7 +27,6 @@ public class AdvertResource {
   private boolean active;
   private BigDecimal price;
   private CategoryResource category;
-
   private List<String> tags;
 
 }
