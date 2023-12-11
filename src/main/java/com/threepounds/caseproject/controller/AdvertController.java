@@ -70,8 +70,6 @@ public class AdvertController {
            esTag.setAdvert(advertToSave);
            esTag.setTag(t);
            esTags.add(esTag);
-           DateTimeFormatter dateTimeFormatter=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-           esTags.stream().map((s)->s.getAdvert().setCreatedDate(s.getAdvert().getCreatedDate().format(dateTimeFormatter)));
            tagService.save(esTag);
 
         });
