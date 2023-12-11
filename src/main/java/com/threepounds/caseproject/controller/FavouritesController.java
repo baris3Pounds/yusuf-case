@@ -1,79 +1,72 @@
 package com.threepounds.caseproject.controller;
 
-import ch.qos.logback.classic.Logger;
-import com.threepounds.caseproject.controller.dto.AdvertDto;
-import com.threepounds.caseproject.controller.dto.EsDto;
 import com.threepounds.caseproject.controller.dto.FavouritesDto;
-import com.threepounds.caseproject.controller.dto.RoleDto;
-import com.threepounds.caseproject.controller.mapper.AdvertMapper;
 import com.threepounds.caseproject.controller.mapper.FavouritesMapper;
-import com.threepounds.caseproject.controller.resource.AdvertResource;
 import com.threepounds.caseproject.controller.resource.FavouritesResource;
-import com.threepounds.caseproject.controller.resource.FeaturesResource;
-import com.threepounds.caseproject.controller.resource.RoleResource;
 import com.threepounds.caseproject.controller.response.ResponseModel;
-import com.threepounds.caseproject.data.entity.*;
+import com.threepounds.caseproject.data.entity.Favourites;
+import com.threepounds.caseproject.data.entity.User;
 import com.threepounds.caseproject.exceptions.NotFoundException;
-import com.threepounds.caseproject.service.*;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.data.domain.Page;
+import com.threepounds.caseproject.service.FavouriteService;
+import com.threepounds.caseproject.service.UserService;
+import java.security.Principal;
+import java.util.List;
+import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/favourites")
 public class FavouritesController {
-    FavouritesMapper favouritesMapper;
-    FavouriteService favouriteService;
+    private final FavouritesMapper favouritesMapper;
+    private final FavouriteService favouriteService;
 
-    public FavouritesController(FavouritesMapper favouritesMapper, FavouriteService favouriteService) {
+    private final UserService userService;
+
+    public FavouritesController(FavouritesMapper favouritesMapper, FavouriteService favouriteService,
+        UserService userService) {
         this.favouritesMapper = favouritesMapper;
         this.favouriteService = favouriteService;
+        this.userService = userService;
     }
 
     @PostMapping("")
-    public ResponseModel<FavouritesResource> createMessage(@RequestBody FavouritesDto favouritesDto){
-        Favourites favourites= favouritesMapper.favouriteDtoToEntity(favouritesDto);
-        favourites.setUser_id(favouritesDto.getUser_id());
-        favourites.setAdvert_id(favouritesDto.getAdvert_id());
+    public ResponseModel<FavouritesResource> createMessage(@RequestBody FavouritesDto favouritesDto,
+        Principal principal) {
+        Favourites favourites = favouritesMapper.favouriteDtoToEntity(favouritesDto);
+        User user = userService.getByEmail(principal.getName())
+            .orElseThrow(() -> new NotFoundException("User not found"));
+        favourites.setUserId(user.getId());
         favouriteService.save(favourites);
-        FavouritesResource favouritesResource1=favouritesMapper.entityToFavouriteResource(favourites);
+        FavouritesResource favouritesResource = favouritesMapper.entityToFavouriteResource(
+            favourites);
 
-        return new ResponseModel<>(HttpStatus.OK.value(),favouritesResource1,null);
+        return new ResponseModel<>(HttpStatus.OK.value(), favouritesResource, null);
     }
 
     @GetMapping("")
-    public ResponseEntity<List<FavouritesResource>> list(){
-    List<FavouritesResource> favouritesResources=favouritesMapper.entityToFavouriteResources(favouriteService.getAllFavourites());
+    public ResponseEntity<List<FavouritesResource>> list() {
+        List<FavouritesResource> favouritesResources = favouritesMapper.entityToFavouriteResources(
+            favouriteService.getAllFavourites());
 
-    return ResponseEntity.ok(favouritesResources);
+        return ResponseEntity.ok(favouritesResources);
 
-}
+    }
 
 
     @DeleteMapping("/{advert_id}")
-    @CacheEvict(value = "favourites",key = "#advert_id")
-    public ResponseEntity<String> delete(@PathVariable UUID advert_id){
-        favouriteService.remove(advert_id);
+    public ResponseEntity<String> delete(@PathVariable UUID advertId){
+        favouriteService.remove(advertId);
         return ResponseEntity.ok("success");
     }
-/*
-    @DeleteMapping("/{advert_id}")
-    @CacheEvict("favourites")
-    public ResponseEntity<String> delete(@RequestBody FavouritesDto favouritesDto){
-        favouriteService.remove(favouritesDto.getAdvert_id());
-        return ResponseEntity.ok("success");
-    }
-*/
+
     
 
 

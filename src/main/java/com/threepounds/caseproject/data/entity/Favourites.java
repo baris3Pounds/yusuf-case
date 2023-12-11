@@ -20,12 +20,12 @@ public class Favourites {
     @GeneratedValue
     private UUID id;
     @Column
-    private UUID user_id;
+    private UUID userId;
     @Column
-    private UUID advert_id;
+    private UUID advertId;
     @Column
     @CreationTimestamp
-    private ZonedDateTime favourited_date;
+    private ZonedDateTime favouritedDate;
 
 
 

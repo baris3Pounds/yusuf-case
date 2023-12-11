@@ -37,4 +37,8 @@ public class UserService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return userRepository.findAll(pageable);
     }
+
+    public Optional<User> getByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
 }
