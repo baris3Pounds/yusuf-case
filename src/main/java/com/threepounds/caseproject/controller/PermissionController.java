@@ -68,10 +68,10 @@ public class PermissionController {
 
         Page<Permission> permissions = permissionService.listByPage(pageNumber, pageSize);
 
-        List<PermissionResource> categoryResources = permissionMapper.entityToPermissionResource(
+        List<PermissionResource> permissionResources = permissionMapper.entityToPermissionResource(
                 permissions.toList());
 
-        return new ResponseModel<>(HttpStatus.OK.value(), categoryResources, null,
+        return new ResponseModel<>(HttpStatus.OK.value(), permissionResources, null,
                 (int) permissions.getTotalElements(), permissions.getTotalPages());
     }
 }
