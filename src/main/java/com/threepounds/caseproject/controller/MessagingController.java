@@ -36,12 +36,9 @@ public class MessagingController {
         User user = messagingService.getUserByEmail(principal.getName())
             .orElseThrow(() -> new NotFoundException("User not found"));
         Messaging messaging=messagingMapper.messagingDtoToEntity(messagingDto);
-        try {
-            messagingService.checkUserExists(messaging.getReceiverId())
-                .orElseThrow(() -> new NotFoundException("User not found"));
-        } catch (Exception e) {
-            e.getMessage();
-        }
+
+        messagingService.checkUserExists(messaging.getReceiverId())
+            .orElseThrow(() -> new NotFoundException("User not found"));
 
         messaging.setEnabled(true);
         messaging.setSenderId(user.getId());
