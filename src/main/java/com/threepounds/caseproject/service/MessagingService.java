@@ -9,42 +9,39 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class MessagingService {
-    private final MessagingRepository messagingRepository;
-    private final UserRepository userRepository;
 
-    public MessagingService(MessagingRepository messagingRepository, UserRepository userRepository) {
-        this.messagingRepository = messagingRepository;
-        this.userRepository = userRepository;
-    }
-    public Messaging save(Messaging messaging){
-        return messagingRepository.save(messaging);
-    }
-    public void delete(UUID id){
-        messagingRepository.findById(id);
+  private final MessagingRepository messagingRepository;
+  private final UserRepository userRepository;
 
-    }
-    public Page<Messaging> listByPage(int pageNumber, int pageSize)
-    {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        return messagingRepository.findAll(pageable);
-    }
-    public Optional<Messaging> getById(UUID id){
-        return messagingRepository.findById(id);
-    }
-    public Optional<Messaging>  getReceiveMessage(UUID id){
-        return messagingRepository.findById(id);
-    }
-    public Optional<User> getUserId(Principal principal){
-        Optional<User> user =userRepository.findByEmail(principal.getName());
+  public MessagingService(MessagingRepository messagingRepository, UserRepository userRepository) {
+    this.messagingRepository = messagingRepository;
+    this.userRepository = userRepository;
+  }
 
+  public Messaging save(Messaging messaging) {
+    return messagingRepository.save(messaging);
+  }
 
-        return user;
-   }
+  public Page<Messaging> listByPage(int pageNumber, int pageSize) {
+    Pageable pageable = PageRequest.of(pageNumber, pageSize);
+    return messagingRepository.findAll(pageable);
+  }
+
+  public Optional<Messaging> getById(UUID id) {
+    return messagingRepository.findById(id);
+  }
+
+  public Optional<User> checkUserExists(UUID id) {
+    return userRepository.findById(id);
+  }
+
+  public Optional<User> getUserByEmail(String email) {
+    return userRepository.findByEmail(email);
+  }
 
 }
