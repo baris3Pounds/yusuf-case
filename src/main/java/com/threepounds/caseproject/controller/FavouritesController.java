@@ -61,9 +61,9 @@ public class FavouritesController {
     }
 
 
-    @DeleteMapping("/{advert_id}")
+    @DeleteMapping("/{advertId}")
     public ResponseEntity<String> delete(@PathVariable UUID advertId){
-        favouriteService.remove(advertId);
+        favouriteService.delete(advertId);
         return ResponseEntity.ok("success");
     }
 

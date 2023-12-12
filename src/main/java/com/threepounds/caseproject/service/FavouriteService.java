@@ -31,8 +31,8 @@ public class FavouriteService {
 
         return favouritesRepository.save(favourites);
     }
-    public void remove(UUID advertId){
-         favouritesRepository.deleteById(advertId);
+    public void delete(UUID id){
+         favouritesRepository.deleteById(id);
 
     }
     public Optional<Favourites> getById(UUID id){
