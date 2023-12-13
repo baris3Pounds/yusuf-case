@@ -38,15 +38,14 @@ public class FavouritesController {
     }
 
     @PostMapping("")
-    public ResponseModel<FavouritesResource> createMessage(@RequestBody FavouritesDto favouritesDto,
+    public ResponseModel<FavouritesResource> createFavourite(@RequestBody FavouritesDto favouritesDto,
         Principal principal) {
         Favourites favourites = favouritesMapper.favouriteDtoToEntity(favouritesDto);
         User user = userService.getByEmail(principal.getName())
             .orElseThrow(() -> new NotFoundException("User not found"));
         favourites.setUserId(user.getId());
         favouriteService.save(favourites);
-        FavouritesResource favouritesResource = favouritesMapper.entityToFavouriteResource(
-            favourites);
+        FavouritesResource favouritesResource = favouritesMapper.entityToFavouriteResource(favourites);
 
         return new ResponseModel<>(HttpStatus.OK.value(), favouritesResource, null);
     }
