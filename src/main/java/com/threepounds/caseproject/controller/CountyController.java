@@ -1,18 +1,14 @@
 package com.threepounds.caseproject.controller;
 
-import com.threepounds.caseproject.controller.dto.CityDto;
 import com.threepounds.caseproject.controller.dto.CountyDto;
 import com.threepounds.caseproject.controller.mapper.CountyMapper;
-import com.threepounds.caseproject.controller.resource.CityResource;
 import com.threepounds.caseproject.controller.resource.CountyResource;
 import com.threepounds.caseproject.controller.response.ResponseModel;
-import com.threepounds.caseproject.data.entity.User;
 import com.threepounds.caseproject.data.entity.adress.City;
 import com.threepounds.caseproject.data.entity.adress.County;
 import com.threepounds.caseproject.exceptions.NotFoundException;
 import com.threepounds.caseproject.service.CityService;
 import com.threepounds.caseproject.service.CountyService;
-import org.apache.el.stream.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,19 +23,30 @@ public class CountyController {
     private final CountyService countyService;
     private final CountyMapper countyMapper;
 
-    public CountyController(CountyService countyService, CountyMapper countyMapper) {
+    private final CityService cityService;
+
+    public CountyController(CountyService countyService, CountyMapper countyMapper,
+        CityService cityService) {
         this.countyService = countyService;
         this.countyMapper = countyMapper;
+        this.cityService = cityService;
     }
 
 
     @PostMapping("")
-    public ResponseEntity<County> createCounty(@RequestBody CountyDto countyDto){
+    public ResponseEntity<CountyResource> createCounty(@RequestBody CountyDto countyDto){
         County county = countyMapper.countyDtoToEntity(countyDto);
+
+        City city = cityService.getById(countyDto.getCity_id())
+            .orElseThrow(() -> new NotFoundException("City Not Found"));
         County savedCounty=countyService.save(county);
+
+        city.getCounties().add(county);
+        cityService.save(city);
+
         CountyResource countyResource = countyMapper.entityToCountyResource(savedCounty);
 
-        return new ResponseEntity<>(savedCounty, HttpStatus.CREATED);
+        return new ResponseEntity<>(countyResource, HttpStatus.CREATED);
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable UUID id){
