@@ -16,6 +16,6 @@ public class CityResource {
 
   private String name;
 
-  private List<County> counties;
+  private List<CountyResource> counties;
 
 }

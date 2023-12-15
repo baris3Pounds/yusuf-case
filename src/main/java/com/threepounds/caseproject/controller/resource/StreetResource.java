@@ -16,6 +16,4 @@ public class StreetResource {
 
   private String name;
 
-  private List<Street> streets;
-
 }

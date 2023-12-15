@@ -17,6 +17,6 @@ public class CountyResource {
 
   private String name;
 
-  private List<Street> streets;
+  private List<StreetResource> streets;
 
 }
