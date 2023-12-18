@@ -34,19 +34,26 @@ public class CountyController {
 
 
     @PostMapping("")
-    public ResponseEntity<CountyResource> createCounty(@RequestBody CountyDto countyDto){
-        County county = countyMapper.countyDtoToEntity(countyDto);
+    public ResponseModel<CountyResource> createCounty(@RequestBody CountyDto countyDto){
+        try{
+            County county = countyMapper.countyDtoToEntity(countyDto);
 
-        City city = cityService.getById(countyDto.getCity_id())
-            .orElseThrow(() -> new NotFoundException("City Not Found"));
-        County savedCounty=countyService.save(county);
+            City city = cityService.getById(countyDto.getCityId())
+                    .orElseThrow(() -> new NotFoundException("City Not Found"));
+            County savedCounty=countyService.save(county);
 
-        city.getCounties().add(county);
-        cityService.save(city);
+            city.getCounties().add(savedCounty);
+            cityService.save(city);
 
-        CountyResource countyResource = countyMapper.entityToCountyResource(savedCounty);
+            CountyResource countyResource = countyMapper.entityToCountyResource(savedCounty);
 
-        return new ResponseEntity<>(countyResource, HttpStatus.CREATED);
+            return new ResponseModel<>(HttpStatus.OK.value(), countyResource, null);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable UUID id){

@@ -35,18 +35,24 @@ public class StreetController {
 
     @PostMapping("")
     public ResponseModel<StreetResource> createStreet(@RequestBody StreetDto streetDto){
-        Street street = streetMapper.streetDtoToEntity(streetDto);
-        County county = countyService.getById(streetDto.getCounty_id())
-                .orElseThrow(() -> new NotFoundException("County Not Found"));
-        Street savedStreet=streetService.save(street);
-        county.getStreets().add(street);
-        countyService.save(county);
+        try{
+            Street street = streetMapper.streetDtoToEntity(streetDto);
 
-        StreetResource streetResource = streetMapper.entityToStreetResource(savedStreet);
+            County county = countyService.getById(streetDto.getCountyId())
+                    .orElseThrow(() -> new NotFoundException("County Not Found"));
+            Street savedStreet=streetService.save(street);
 
-        return new ResponseModel<>(HttpStatus.OK.value(), streetResource, null);
+            county.getStreets().add(savedStreet);
+            countyService.save(county);
 
+            StreetResource streetResource = streetMapper.entityToStreetResource(savedStreet);
 
+            return new ResponseModel<>(HttpStatus.OK.value(), streetResource, null);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable UUID id){

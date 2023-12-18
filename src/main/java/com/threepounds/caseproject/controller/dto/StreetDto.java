@@ -15,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class StreetDto {
     private String name;
-    private UUID county_id;
+    private UUID countyId;
 }
 
 

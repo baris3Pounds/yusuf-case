@@ -1,5 +1,6 @@
 package com.threepounds.caseproject.data.entity.adress;
 
+import com.threepounds.caseproject.data.entity.Category;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

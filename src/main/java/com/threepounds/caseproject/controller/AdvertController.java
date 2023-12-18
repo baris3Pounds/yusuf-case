@@ -1,7 +1,6 @@
 package com.threepounds.caseproject.controller;
 
 import com.threepounds.caseproject.controller.dto.AdvertDto;
-import com.threepounds.caseproject.controller.dto.EsDto;
 import com.threepounds.caseproject.controller.mapper.AdvertMapper;
 import com.threepounds.caseproject.controller.resource.AdvertResource;
 import com.threepounds.caseproject.controller.response.ResponseModel;
@@ -9,20 +8,19 @@ import com.threepounds.caseproject.data.entity.Advert;
 import com.threepounds.caseproject.data.entity.ESTag;
 import com.threepounds.caseproject.data.entity.Tag;
 import com.threepounds.caseproject.data.entity.Category;
+import com.threepounds.caseproject.data.entity.adress.City;
+import com.threepounds.caseproject.data.entity.adress.County;
+import com.threepounds.caseproject.data.entity.adress.Street;
 import com.threepounds.caseproject.exceptions.NotFoundException;
-import com.threepounds.caseproject.service.AdvertService;
-import com.threepounds.caseproject.service.AdvertTagService;
-import com.threepounds.caseproject.service.CategoryService;
+import com.threepounds.caseproject.service.*;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import java.util.stream.Collectors;
 
-import com.threepounds.caseproject.service.TagService;
+//import com.threepounds.caseproject.service.TagService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -42,22 +40,44 @@ public class AdvertController {
     private final CategoryService categoryService;
 
     private final AdvertTagService advertTagService;
-    private final TagService tagService;
+    //private final TagService tagService;
+    private final CityService cityService;
+    private final CountyService countyService;
+    private final StreetService streetService;
+
+
+
+
 
 
 
     public AdvertController(AdvertService advertService, AdvertMapper advertMapper,
-                            CategoryService categoryService, AdvertTagService advertTagService, TagService tagService) {
+                            CategoryService categoryService, AdvertTagService advertTagService, CityService cityService, CountyService countyService, StreetService streetService) {
         this.advertService = advertService;
         this.advertMapper = advertMapper;
         this.categoryService = categoryService;
         this.advertTagService = advertTagService;
-        this.tagService = tagService;
+        //this.tagService = tagService;
+        this.cityService = cityService;
+        this.countyService = countyService;
+        this.streetService = streetService;
     }
     @PostMapping("")
     public ResponseModel<AdvertResource> createAdvert(@RequestBody AdvertDto advertDto){
         Advert advertToSave= advertMapper.advertDtoToEntity(advertDto);
         advertService.save(advertToSave);
+        City city = cityService.getById(advertDto.getCityId())
+                .orElseThrow(() -> new NotFoundException("City Not Found"));
+        County county = countyService.getById(advertDto.getCountyId())
+                .orElseThrow(() -> new NotFoundException("County Not Found"));
+        Street street = streetService.getById(advertDto.getStreetId())
+                .orElseThrow(() -> new NotFoundException("Street Not Found"));
+        county.getStreets().add(street);
+        city.getCounties().add(county);
+        //System.out.println(countyService.getById(advertDto.getCountyId()).stream().map(s -> s.getName()));
+        cityService.save(city);
+        countyService.save(county);
+        streetService.save(street);
         List<Tag> tags = new ArrayList<>();
         List<ESTag> esTags=new ArrayList<>();
         advertDto.getTags().forEach(t->{
@@ -70,7 +90,7 @@ public class AdvertController {
            esTag.setAdvert(advertToSave);
            esTag.setTag(t);
            esTags.add(esTag);
-           tagService.save(esTag);
+           //tagService.save(esTag);
 
         });
 
@@ -143,6 +163,7 @@ public class AdvertController {
         return new ResponseModel<>(HttpStatus.OK.value(), advertResources, null,
                 (int) adverts.getTotalElements(), adverts.getTotalPages());
     }
+    /*
     @GetMapping("/es")
     public ResponseModel<Iterable<ESTag>> getAll(){
         Iterable<ESTag> esTags=tagService.getAllTags();
@@ -153,6 +174,6 @@ public class AdvertController {
               List<ESTag>esTags= tagService.searchAdvert(esDto);
         return new ResponseModel<>(HttpStatus.OK.value(),esTags,null);
     }
-
+*/
 
 }

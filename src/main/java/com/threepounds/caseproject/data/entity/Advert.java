@@ -41,6 +41,15 @@ public class Advert {
   @Column
   private BigDecimal price;
 
+  @Column
+  private UUID cityId;
+
+  @Column
+  private UUID countyId;
+
+  @Column
+  private UUID streetId;
+
   @ManyToOne
   @JoinColumn(name = "category_id",referencedColumnName = "id")
   private Category category;

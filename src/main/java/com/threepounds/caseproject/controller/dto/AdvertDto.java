@@ -26,6 +26,9 @@ public class AdvertDto {
     private List<String> tags;
     private ZonedDateTime createdDate;
     private BigDecimal price;
+    private UUID cityId;
+    private UUID countyId;
+    private UUID streetId;
 
 
 

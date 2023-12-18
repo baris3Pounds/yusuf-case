@@ -27,6 +27,4 @@ public class County {
   @OneToMany
   private List<Street> streets;
 
-
-
 }

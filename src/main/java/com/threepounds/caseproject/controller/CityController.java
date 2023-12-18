@@ -31,12 +31,18 @@ public class CityController {
 
     @PostMapping("")
     public ResponseModel<CityResource> createCity(@RequestBody CityDto cityDto){
-        City city = cityMapper.cityDtoToEntity(cityDto);
-        City savedCity=cityService.save(city);
-        CityResource cityResource = cityMapper.entityToCityResource(savedCity);
+        try {
+            City city = cityMapper.cityDtoToEntity(cityDto);
+            City savedCity = cityService.save(city);
+            CityResource cityResource = cityMapper.entityToCityResource(savedCity);
 
 
-        return new ResponseModel<>(HttpStatus.OK.value(), cityResource, null);
+            return new ResponseModel<>(HttpStatus.OK.value(), cityResource, null);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable UUID id){
