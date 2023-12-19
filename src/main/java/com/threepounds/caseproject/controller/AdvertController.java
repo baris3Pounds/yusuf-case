@@ -72,12 +72,15 @@ public class AdvertController {
                 .orElseThrow(() -> new NotFoundException("County Not Found"));
         Street street = streetService.getById(advertDto.getStreetId())
                 .orElseThrow(() -> new NotFoundException("Street Not Found"));
-        county.getStreets().add(street);
-        city.getCounties().add(county);
-        //System.out.println(countyService.getById(advertDto.getCountyId()).stream().map(s -> s.getName()));
-        cityService.save(city);
-        countyService.save(county);
-        streetService.save(street);
+//        county.getStreets().add(street);
+//        city.getCounties().add(county);
+//        //System.out.println(countyService.getById(advertDto.getCountyId()).stream().map(s -> s.getName()));
+//        cityService.save(city);
+//        countyService.save(county);
+//        streetService.save(street);
+        advertToSave.setCityId(advertDto.getCityId());
+        advertToSave.setCountyId(advertDto.getCountyId());
+        advertToSave.setStreetId(advertDto.getStreetId());
         List<Tag> tags = new ArrayList<>();
         List<ESTag> esTags=new ArrayList<>();
         advertDto.getTags().forEach(t->{
@@ -129,6 +132,9 @@ public class AdvertController {
     public ResponseModel<AdvertResource> update(@PathVariable UUID id,@RequestBody AdvertDto advertDto){
         Advert existingAdvert=advertService.getById(id)
                 .orElseThrow(()->new RuntimeException());
+
+        // TODO city , county , street
+
         Advert mappedAdvert=advertMapper.advertDtoToEntity(advertDto);
         mappedAdvert.setId(existingAdvert.getId());
         Advert updateAdvert=advertService.save(mappedAdvert);
@@ -175,5 +181,8 @@ public class AdvertController {
         return new ResponseModel<>(HttpStatus.OK.value(),esTags,null);
     }
 */
+
+    // TODO , put mapping endpoint , ilanın gösterilme sayısını artırsın
+
 
 }
