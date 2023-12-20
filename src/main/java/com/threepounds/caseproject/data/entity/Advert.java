@@ -57,6 +57,8 @@ public class Advert {
   @OneToMany
   private List<Tag> tag;
 
+  @Column
+  private Integer counter = 0;
 
 
 }

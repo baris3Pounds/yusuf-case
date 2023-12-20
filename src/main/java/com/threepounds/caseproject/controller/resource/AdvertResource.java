@@ -30,4 +30,7 @@ public class AdvertResource {
 
   private List<String> tags;
 
+  private UUID cityId;
+  private UUID countyId;
+  private UUID streetId;
 }

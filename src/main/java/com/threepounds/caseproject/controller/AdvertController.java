@@ -4,10 +4,7 @@ import com.threepounds.caseproject.controller.dto.AdvertDto;
 import com.threepounds.caseproject.controller.mapper.AdvertMapper;
 import com.threepounds.caseproject.controller.resource.AdvertResource;
 import com.threepounds.caseproject.controller.response.ResponseModel;
-import com.threepounds.caseproject.data.entity.Advert;
-import com.threepounds.caseproject.data.entity.ESTag;
-import com.threepounds.caseproject.data.entity.Tag;
-import com.threepounds.caseproject.data.entity.Category;
+import com.threepounds.caseproject.data.entity.*;
 import com.threepounds.caseproject.data.entity.adress.City;
 import com.threepounds.caseproject.data.entity.adress.County;
 import com.threepounds.caseproject.data.entity.adress.Street;
@@ -119,24 +116,33 @@ public class AdvertController {
         advertService.delete(id);
         return ResponseEntity.ok("success");
     }
-    @GetMapping("{id}")
-    @Cacheable(value = "advert",key = "#id")
+    @GetMapping("/{id}")
+    //@Cacheable(value = "advert",key = "#id")
     public ResponseModel<AdvertResource> getOneAdvert(@PathVariable UUID id){
         Advert advert= advertService.getById(id)
                 .orElseThrow(()-> new IllegalArgumentException() );
+        if(advert.getCounter()==null){
+            advert.setCounter(0);
+        }
+        advert.setCounter(advert.getCounter()+1);
+        advertService.save(advert);
+        System.out.println(advert.getCounter());
         AdvertResource advertResource = advertMapper.entityToAdvertResource(advert);
         return new ResponseModel<>(HttpStatus.OK.value(),advertResource,null);
     }
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     @CachePut(value = "advert",key="#id")
     public ResponseModel<AdvertResource> update(@PathVariable UUID id,@RequestBody AdvertDto advertDto){
         Advert existingAdvert=advertService.getById(id)
                 .orElseThrow(()->new RuntimeException());
+        existingAdvert.setCityId(advertDto.getCityId());
+        existingAdvert.setCountyId(advertDto.getCountyId());
+        existingAdvert.setStreetId(advertDto.getStreetId());
 
-        // TODO city , county , street
 
         Advert mappedAdvert=advertMapper.advertDtoToEntity(advertDto);
         mappedAdvert.setId(existingAdvert.getId());
+
         Advert updateAdvert=advertService.save(mappedAdvert);
         AdvertResource advertResource= advertMapper.entityToAdvertResource(updateAdvert);
         return new ResponseModel<>(HttpStatus.OK.value(),advertResource,null);
@@ -183,6 +189,19 @@ public class AdvertController {
 */
 
     // TODO , put mapping endpoint , ilanın gösterilme sayısını artırsın
+    @PutMapping("/display/{id}")
+    @CachePut(value = "advert",key="#id")
+    public Integer displayCount(@PathVariable UUID id){
+        Advert existingAdvert=advertService.getById(id)
+                .orElseThrow(()->new RuntimeException());
+        if(existingAdvert.getCounter()==null){
+            existingAdvert.setCounter(0);
+        }
+        System.out.println(existingAdvert.getCounter());
+
+        return existingAdvert.getCounter();
+
+    }
 
 
 }
