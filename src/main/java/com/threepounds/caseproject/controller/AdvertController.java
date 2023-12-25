@@ -11,6 +11,7 @@ import com.threepounds.caseproject.data.entity.adress.Street;
 import com.threepounds.caseproject.exceptions.NotFoundException;
 import com.threepounds.caseproject.service.*;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -21,7 +22,6 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +41,7 @@ public class AdvertController {
     private final CityService cityService;
     private final CountyService countyService;
     private final StreetService streetService;
+    private final UserService userService;
 
 
 
@@ -49,7 +50,7 @@ public class AdvertController {
 
 
     public AdvertController(AdvertService advertService, AdvertMapper advertMapper,
-                            CategoryService categoryService, AdvertTagService advertTagService, CityService cityService, CountyService countyService, StreetService streetService) {
+                            CategoryService categoryService, AdvertTagService advertTagService, CityService cityService, CountyService countyService, StreetService streetService, UserService userService) {
         this.advertService = advertService;
         this.advertMapper = advertMapper;
         this.categoryService = categoryService;
@@ -58,10 +59,14 @@ public class AdvertController {
         this.cityService = cityService;
         this.countyService = countyService;
         this.streetService = streetService;
+        this.userService = userService;
     }
     @PostMapping("")
-    public ResponseModel<AdvertResource> createAdvert(@RequestBody AdvertDto advertDto){
+    public ResponseModel<AdvertResource> createAdvert(@RequestBody AdvertDto advertDto, Principal principal){
+        User user = userService.getByEmail(principal.getName())
+                .orElseThrow(() -> new NotFoundException("User not found"));
         Advert advertToSave= advertMapper.advertDtoToEntity(advertDto);
+        advertToSave.setCreatorId(user.getId());
         advertService.save(advertToSave);
         City city = cityService.getById(advertDto.getCityId())
                 .orElseThrow(() -> new NotFoundException("City Not Found"));
@@ -121,12 +126,8 @@ public class AdvertController {
     public ResponseModel<AdvertResource> getOneAdvert(@PathVariable UUID id){
         Advert advert= advertService.getById(id)
                 .orElseThrow(()-> new IllegalArgumentException() );
-        if(advert.getCounter()==null){
-            advert.setCounter(0);
-        }
-        advert.setCounter(advert.getCounter()+1);
+
         advertService.save(advert);
-        System.out.println(advert.getCounter());
         AdvertResource advertResource = advertMapper.entityToAdvertResource(advert);
         return new ResponseModel<>(HttpStatus.OK.value(),advertResource,null);
     }
