@@ -28,10 +28,9 @@ public class AdvertResource {
   private boolean active;
   private BigDecimal price;
   private CategoryResource category;
-
   private List<String> tags;
 
-  private UUID cityId;
-  private UUID countyId;
-  private UUID streetId;
+  private CityResource city;
+  private CountyResource county;
+  private StreetResource street;
 }

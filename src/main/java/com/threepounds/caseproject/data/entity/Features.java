@@ -25,10 +25,4 @@ public class Features {
     @JoinColumn(name = "category_id",referencedColumnName = "id")
     private Category category;
 
-    public Features(UUID id, String title, boolean active) {
-        this.id = id;
-        this.title = title;
-        this.active = active;
-    }
-
-}
+  }
