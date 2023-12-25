@@ -1,23 +1,28 @@
 package com.threepounds.caseproject.controller;
 
 import com.threepounds.caseproject.controller.dto.AdvertDto;
+import com.threepounds.caseproject.controller.dto.EsDto;
 import com.threepounds.caseproject.controller.mapper.AdvertMapper;
 import com.threepounds.caseproject.controller.resource.AdvertResource;
 import com.threepounds.caseproject.controller.response.ResponseModel;
-import com.threepounds.caseproject.data.entity.*;
-import com.threepounds.caseproject.data.entity.adress.City;
-import com.threepounds.caseproject.data.entity.adress.County;
-import com.threepounds.caseproject.data.entity.adress.Street;
+import com.threepounds.caseproject.data.entity.Advert;
+import com.threepounds.caseproject.data.entity.ESTag;
+import com.threepounds.caseproject.data.entity.Tag;
+import com.threepounds.caseproject.data.entity.Category;
 import com.threepounds.caseproject.exceptions.NotFoundException;
-import com.threepounds.caseproject.service.*;
+import com.threepounds.caseproject.service.AdvertService;
+import com.threepounds.caseproject.service.AdvertTagService;
+import com.threepounds.caseproject.service.CategoryService;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import java.util.stream.Collectors;
 
-//import com.threepounds.caseproject.service.TagService;
+import com.threepounds.caseproject.service.TagService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -90,7 +95,7 @@ public class AdvertController {
            esTag.setAdvert(advertToSave);
            esTag.setTag(t);
            esTags.add(esTag);
-           //tagService.save(esTag);
+           tagService.save(esTag);
 
         });
 
@@ -121,12 +126,6 @@ public class AdvertController {
     public ResponseModel<AdvertResource> getOneAdvert(@PathVariable UUID id){
         Advert advert= advertService.getById(id)
                 .orElseThrow(()-> new IllegalArgumentException() );
-        if(advert.getCounter()==null){
-            advert.setCounter(0);
-        }
-        advert.setCounter(advert.getCounter()+1);
-        advertService.save(advert);
-        System.out.println(advert.getCounter());
         AdvertResource advertResource = advertMapper.entityToAdvertResource(advert);
         return new ResponseModel<>(HttpStatus.OK.value(),advertResource,null);
     }
