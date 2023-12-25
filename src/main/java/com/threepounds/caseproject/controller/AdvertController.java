@@ -80,12 +80,7 @@ public class AdvertController {
                 .orElseThrow(() -> new NotFoundException("County Not Found"));
         Street street = streetService.getById(advertDto.getStreetId())
                 .orElseThrow(() -> new NotFoundException("Street Not Found"));
-//        county.getStreets().add(street);
-//        city.getCounties().add(county);
-//        //System.out.println(countyService.getById(advertDto.getCountyId()).stream().map(s -> s.getName()));
-//        cityService.save(city);
-//        countyService.save(county);
-//        streetService.save(street);
+
         advertToSave.setCityId(advertDto.getCityId());
         advertToSave.setCountyId(advertDto.getCountyId());
         advertToSave.setStreetId(advertDto.getStreetId());
