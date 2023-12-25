@@ -56,6 +56,7 @@ public class RestResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<ErrorResponse> generalException(Exception e) {
+        e.printStackTrace();
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setErrorCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
         errorResponse.setErrorMessage("Internal Server Error");
