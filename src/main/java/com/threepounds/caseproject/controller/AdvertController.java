@@ -9,11 +9,17 @@ import com.threepounds.caseproject.data.entity.Advert;
 import com.threepounds.caseproject.data.entity.ESTag;
 import com.threepounds.caseproject.data.entity.Tag;
 import com.threepounds.caseproject.data.entity.Category;
+import com.threepounds.caseproject.data.entity.adress.City;
+import com.threepounds.caseproject.data.entity.adress.County;
+import com.threepounds.caseproject.data.entity.adress.Street;
 import com.threepounds.caseproject.exceptions.NotFoundException;
 import com.threepounds.caseproject.service.AdvertService;
 import com.threepounds.caseproject.service.AdvertTagService;
 import com.threepounds.caseproject.service.CategoryService;
 
+import com.threepounds.caseproject.service.CityService;
+import com.threepounds.caseproject.service.CountyService;
+import com.threepounds.caseproject.service.StreetService;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -42,7 +48,7 @@ public class AdvertController {
     private final CategoryService categoryService;
 
     private final AdvertTagService advertTagService;
-    //private final TagService tagService;
+    private final TagService tagService;
     private final CityService cityService;
     private final CountyService countyService;
     private final StreetService streetService;
@@ -54,12 +60,12 @@ public class AdvertController {
 
 
     public AdvertController(AdvertService advertService, AdvertMapper advertMapper,
-                            CategoryService categoryService, AdvertTagService advertTagService, CityService cityService, CountyService countyService, StreetService streetService) {
+                            CategoryService categoryService, AdvertTagService advertTagService, TagService tagService, CityService cityService, CountyService countyService, StreetService streetService) {
         this.advertService = advertService;
         this.advertMapper = advertMapper;
         this.categoryService = categoryService;
         this.advertTagService = advertTagService;
-        //this.tagService = tagService;
+        this.tagService = tagService;
         this.cityService = cityService;
         this.countyService = countyService;
         this.streetService = streetService;
