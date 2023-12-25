@@ -20,6 +20,7 @@ public class AdvertResource {
   private UUID id;
 
   private String title;
+  private UUID creatorId;
 
   private String description;
   private ZonedDateTime lastUpdate;

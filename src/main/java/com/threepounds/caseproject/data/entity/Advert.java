@@ -60,5 +60,8 @@ public class Advert {
   @Column
   private Integer counter = 0;
 
+  @Column
+  private UUID creatorId;
+
 
 }

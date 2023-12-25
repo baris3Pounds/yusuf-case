@@ -9,6 +9,7 @@ import com.threepounds.caseproject.data.entity.Advert;
 import com.threepounds.caseproject.data.entity.ESTag;
 import com.threepounds.caseproject.data.entity.Tag;
 import com.threepounds.caseproject.data.entity.Category;
+import com.threepounds.caseproject.data.entity.User;
 import com.threepounds.caseproject.data.entity.adress.City;
 import com.threepounds.caseproject.data.entity.adress.County;
 import com.threepounds.caseproject.data.entity.adress.Street;
@@ -20,6 +21,8 @@ import com.threepounds.caseproject.service.CategoryService;
 import com.threepounds.caseproject.service.CityService;
 import com.threepounds.caseproject.service.CountyService;
 import com.threepounds.caseproject.service.StreetService;
+import com.threepounds.caseproject.service.UserService;
+import java.security.Principal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -52,6 +55,7 @@ public class AdvertController {
     private final CityService cityService;
     private final CountyService countyService;
     private final StreetService streetService;
+    private final UserService userService;
 
 
 
@@ -60,7 +64,7 @@ public class AdvertController {
 
 
     public AdvertController(AdvertService advertService, AdvertMapper advertMapper,
-                            CategoryService categoryService, AdvertTagService advertTagService, TagService tagService, CityService cityService, CountyService countyService, StreetService streetService) {
+                            CategoryService categoryService, AdvertTagService advertTagService, TagService tagService, CityService cityService, CountyService countyService, StreetService streetService, UserService userService) {
         this.advertService = advertService;
         this.advertMapper = advertMapper;
         this.categoryService = categoryService;
@@ -69,10 +73,14 @@ public class AdvertController {
         this.cityService = cityService;
         this.countyService = countyService;
         this.streetService = streetService;
+        this.userService = userService;
     }
     @PostMapping("")
-    public ResponseModel<AdvertResource> createAdvert(@RequestBody AdvertDto advertDto){
+    public ResponseModel<AdvertResource> createAdvert(@RequestBody AdvertDto advertDto, Principal principal){
+        User user = userService.getByEmail(principal.getName())
+                .orElseThrow(() -> new NotFoundException("User not found"));
         Advert advertToSave= advertMapper.advertDtoToEntity(advertDto);
+        advertToSave.setCreatorId(user.getId());
         advertService.save(advertToSave);
         City city = cityService.getById(advertDto.getCityId())
                 .orElseThrow(() -> new NotFoundException("City Not Found"));
@@ -80,7 +88,12 @@ public class AdvertController {
                 .orElseThrow(() -> new NotFoundException("County Not Found"));
         Street street = streetService.getById(advertDto.getStreetId())
                 .orElseThrow(() -> new NotFoundException("Street Not Found"));
-
+//        county.getStreets().add(street);
+//        city.getCounties().add(county);
+//        //System.out.println(countyService.getById(advertDto.getCountyId()).stream().map(s -> s.getName()));
+//        cityService.save(city);
+//        countyService.save(county);
+//        streetService.save(street);
         advertToSave.setCityId(advertDto.getCityId());
         advertToSave.setCountyId(advertDto.getCountyId());
         advertToSave.setStreetId(advertDto.getStreetId());
@@ -96,7 +109,7 @@ public class AdvertController {
            esTag.setAdvert(advertToSave);
            esTag.setTag(t);
            esTags.add(esTag);
-           tagService.save(esTag);
+           //tagService.save(esTag);
 
         });
 
@@ -127,6 +140,8 @@ public class AdvertController {
     public ResponseModel<AdvertResource> getOneAdvert(@PathVariable UUID id){
         Advert advert= advertService.getById(id)
                 .orElseThrow(()-> new IllegalArgumentException() );
+
+        advertService.save(advert);
         AdvertResource advertResource = advertMapper.entityToAdvertResource(advert);
         return new ResponseModel<>(HttpStatus.OK.value(),advertResource,null);
     }
