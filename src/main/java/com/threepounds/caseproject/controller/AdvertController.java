@@ -31,7 +31,7 @@ import java.util.UUID;
 
 import java.util.stream.Collectors;
 
-import com.threepounds.caseproject.service.TagService;
+//import com.threepounds.caseproject.service.TagService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -51,7 +51,7 @@ public class AdvertController {
     private final CategoryService categoryService;
 
     private final AdvertTagService advertTagService;
-    private final TagService tagService;
+    //private final TagService tagService;
     private final CityService cityService;
     private final CountyService countyService;
     private final StreetService streetService;
@@ -64,12 +64,12 @@ public class AdvertController {
 
 
     public AdvertController(AdvertService advertService, AdvertMapper advertMapper,
-                            CategoryService categoryService, AdvertTagService advertTagService, TagService tagService, CityService cityService, CountyService countyService, StreetService streetService, UserService userService) {
+                            CategoryService categoryService, AdvertTagService advertTagService, CityService cityService, CountyService countyService, StreetService streetService, UserService userService) {
         this.advertService = advertService;
         this.advertMapper = advertMapper;
         this.categoryService = categoryService;
         this.advertTagService = advertTagService;
-        this.tagService = tagService;
+        //this.tagService = tagService;
         this.cityService = cityService;
         this.countyService = countyService;
         this.streetService = streetService;
@@ -117,6 +117,7 @@ public class AdvertController {
             advertToSave.setTag(tags);
             Category category = categoryService.getById(advertDto.getCategoryId())
                 .orElseThrow(() -> new IllegalArgumentException());
+
             Advert savedAdvert = advertService.save(advertToSave);
             savedAdvert.setCategory(category);
             advertService.save(savedAdvert);

@@ -7,6 +7,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import com.threepounds.caseproject.data.entity.Tag;
+import com.threepounds.caseproject.data.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,7 @@ public class AdvertResource {
   private UUID id;
 
   private String title;
-  private UUID creatorId;
+  private UserResource creator;
 
   private String description;
   private ZonedDateTime lastUpdate;
