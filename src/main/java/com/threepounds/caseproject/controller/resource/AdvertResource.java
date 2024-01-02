@@ -34,4 +34,7 @@ public class AdvertResource {
   private CityResource city;
   private CountyResource county;
   private StreetResource street;
+  private BigDecimal latitude;
+  private BigDecimal longitude;
+  private Double distance;
 }

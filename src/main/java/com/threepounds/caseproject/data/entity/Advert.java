@@ -63,5 +63,9 @@ public class Advert {
   @Column
   private UUID creatorId;
 
+  @Column
+  private BigDecimal latitude;
 
+  @Column
+  private BigDecimal longitude;
 }

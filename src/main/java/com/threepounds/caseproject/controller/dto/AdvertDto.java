@@ -29,8 +29,8 @@ public class AdvertDto {
     private UUID cityId;
     private UUID countyId;
     private UUID streetId;
-
-
+    private BigDecimal latitude;
+    private BigDecimal longitude;
 
 }
 
