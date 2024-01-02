@@ -7,8 +7,8 @@
     <changeSet author="tevfikuykun" id="1" >
 
         <addColumn tableName="advert">
-            <column name="latitude" type="varchar(64)"/>
-            <column name="longitude" type="varchar(64)"/>
+            <column name="latitude" type="DOUBLE"/>
+            <column name="longitude" type="DOUBLE"/>
         </addColumn>
 
 

@@ -52,6 +52,7 @@ public abstract class AdvertMapper {
 
    public abstract Advert advertDtoToEntity(AdvertDto advertDto);
 
+   @Mapping(target = "distance", ignore = true)
    public abstract AdvertResource entityToAdvertResource(Advert advert);
 
    public abstract List<AdvertResource> entityToAdvertResource(List<Advert> advert);

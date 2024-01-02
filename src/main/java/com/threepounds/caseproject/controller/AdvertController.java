@@ -1,6 +1,7 @@
 package com.threepounds.caseproject.controller;
 
 import com.threepounds.caseproject.controller.dto.AdvertDto;
+import com.threepounds.caseproject.controller.dto.DistanceRequestDto;
 import com.threepounds.caseproject.controller.dto.EsDto;
 import com.threepounds.caseproject.controller.mapper.AdvertMapper;
 import com.threepounds.caseproject.controller.resource.AdvertResource;
@@ -28,6 +29,7 @@ import java.security.Principal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -91,12 +93,7 @@ public class AdvertController {
                 .orElseThrow(() -> new NotFoundException("County Not Found"));
         Street street = streetService.getById(advertDto.getStreetId())
                 .orElseThrow(() -> new NotFoundException("Street Not Found"));
-//        county.getStreets().add(street);
-//        city.getCounties().add(county);
-//        //System.out.println(countyService.getById(advertDto.getCountyId()).stream().map(s -> s.getName()));
-//        cityService.save(city);
-//        countyService.save(county);
-//        streetService.save(street);
+
         advertToSave.setCityId(advertDto.getCityId());
         advertToSave.setCountyId(advertDto.getCountyId());
         advertToSave.setStreetId(advertDto.getStreetId());
@@ -221,14 +218,21 @@ public class AdvertController {
         return existingAdvert.getCounter();
 
     }
-    @GetMapping("/distance")
-    public ResponseEntity<List<AdvertResource>> searchByDistance(@RequestParam BigDecimal latitude,@RequestParam BigDecimal longitude) {
+    @PutMapping("/distance")
+    public ResponseEntity<List<AdvertResource>> searchByDistance(@RequestBody DistanceRequestDto distanceRequest) {
 
         List<AdvertResource> advertResources=advertMapper.entityToAdvertResource(advertService.getAllAdvert());
-        for (int i=1;i<advertResources.size();i++){
-            double distance = advertService.findDistance(latitude.doubleValue(),advertResources.get(i).getLatitude().doubleValue(),longitude.doubleValue(),advertResources.get(i).getLongitude().doubleValue());
-            advertResources.get(i).setDistance(distance);
+//        for (int i=1;i<advertResources.size();i++){
+        for (AdvertResource resource : advertResources) {
+            double distance = advertService.findDistance(distanceRequest.getLatitude(),
+                resource.getLatitude().doubleValue(), distanceRequest.getLongitude(),
+                resource.getLongitude().doubleValue());
+            resource.setDistance(distance);
         }
+
+        // sort by distance
+        Collections.sort(advertResources, (o1, o2) -> (int)(o1.getDistance() - o2.getDistance()));
+
         return ResponseEntity.ok(advertResources);
 
     }

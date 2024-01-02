@@ -1,8 +1,6 @@
 package com.threepounds.caseproject.controller.dto;
 
 
-import com.threepounds.caseproject.data.entity.ESTag;
-import com.threepounds.caseproject.data.entity.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,8 +27,8 @@ public class AdvertDto {
     private UUID cityId;
     private UUID countyId;
     private UUID streetId;
-    private BigDecimal latitude;
-    private BigDecimal longitude;
+    private Double latitude;
+    private Double longitude;
 
 }
 

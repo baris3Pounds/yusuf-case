@@ -44,8 +44,7 @@ public class AdvertService {
     public double findDistance(double lat1Rad,double lat2Rad,double lon1Rad,double lon2Rad){
         double x = (lon2Rad - lon1Rad) * Math.cos((lat1Rad + lat2Rad) / 2);
         double y = (lat2Rad - lat1Rad);
-        double distance = Math.sqrt(x * x + y * y) * 6371;
-        return distance;
+        return Math.sqrt(x * x + y * y) * 6371;
     }
 
     public List<Advert> advertsByCategory(Category category){

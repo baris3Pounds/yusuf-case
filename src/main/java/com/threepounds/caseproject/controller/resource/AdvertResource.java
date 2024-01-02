@@ -1,13 +1,10 @@
 package com.threepounds.caseproject.controller.resource;
 
-import com.threepounds.caseproject.data.entity.Category;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import com.threepounds.caseproject.data.entity.Tag;
-import com.threepounds.caseproject.data.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,7 +31,7 @@ public class AdvertResource {
   private CityResource city;
   private CountyResource county;
   private StreetResource street;
-  private BigDecimal latitude;
-  private BigDecimal longitude;
+  private Double latitude;
+  private Double longitude;
   private Double distance;
 }
