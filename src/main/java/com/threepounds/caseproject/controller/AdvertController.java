@@ -22,6 +22,8 @@ import com.threepounds.caseproject.service.CityService;
 import com.threepounds.caseproject.service.CountyService;
 import com.threepounds.caseproject.service.StreetService;
 import com.threepounds.caseproject.service.UserService;
+
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -45,6 +47,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/advert")
 public class AdvertController {
+    private static final double EARTH_RADIUS = 6371;
     private final AdvertService advertService;
     private final AdvertMapper advertMapper;
 
@@ -216,6 +219,17 @@ public class AdvertController {
         System.out.println(existingAdvert.getCounter());
 
         return existingAdvert.getCounter();
+
+    }
+    @GetMapping("/distance")
+    public ResponseEntity<List<AdvertResource>> searchByDistance(@RequestParam BigDecimal latitude,@RequestParam BigDecimal longitude) {
+
+        List<AdvertResource> advertResources=advertMapper.entityToAdvertResource(advertService.getAllAdvert());
+        for (int i=1;i<advertResources.size();i++){
+            double distance = advertService.findDistance(latitude.doubleValue(),advertResources.get(i).getLatitude().doubleValue(),longitude.doubleValue(),advertResources.get(i).getLongitude().doubleValue());
+            advertResources.get(i).setDistance(distance);
+        }
+        return ResponseEntity.ok(advertResources);
 
     }
 

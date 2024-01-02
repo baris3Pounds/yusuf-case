@@ -1,4 +1,5 @@
 package com.threepounds.caseproject.service;
+import com.threepounds.caseproject.controller.resource.AdvertResource;
 import com.threepounds.caseproject.data.entity.Advert;
 
 import com.threepounds.caseproject.data.entity.Category;
@@ -30,12 +31,21 @@ public class AdvertService {
          advertRepository.deleteById(id);
 
     }
+
+
     public Optional<Advert> getById(UUID id){
         return advertRepository.findById(id);
     
     }
     public List<Advert> getAllAdvert(){
         return advertRepository.findAll();
+    }
+
+    public double findDistance(double lat1Rad,double lat2Rad,double lon1Rad,double lon2Rad){
+        double x = (lon2Rad - lon1Rad) * Math.cos((lat1Rad + lat2Rad) / 2);
+        double y = (lat2Rad - lat1Rad);
+        double distance = Math.sqrt(x * x + y * y) * 6371;
+        return distance;
     }
 
     public List<Advert> advertsByCategory(Category category){
