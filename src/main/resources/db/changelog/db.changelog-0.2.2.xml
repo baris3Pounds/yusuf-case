@@ -6,16 +6,6 @@
 
     <changeSet author="tevfikuykun" id="1" >
 
-        <insert tableName="advert">
-            <column name="id" value="a3a22fef-20da-475b-acf4-e4c1eb82358e"/>
-            <column name="title" value="Motorsiklet"/>
-            <column name="description" value="Mavi renkli,spor motorsiklet"/>
-            <column name="active" value="true"/>
-            <column name="price" value="13549.95"/>
-            <column name="category_id" value="c1a22fef-20da-475b-acf4-e4c1eb82358e"/>
-            <column name="tags" value="kiralık motosiklet,spor motor,mavi spor motor"/>
-        </insert>
-
         <insert tableName="tags">
             <column name="id" value="a1a22fef-20da-475b-acf4-e4c1eb82358e"/>
             <column name="tags" value="kiralık motosiklet,spor motor,mavi spor motor"/>
