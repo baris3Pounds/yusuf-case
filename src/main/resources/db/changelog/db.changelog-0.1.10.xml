@@ -9,6 +9,7 @@
           columnName="price"
           newDataType="DECIMAL(10, 2)"
           tableName="advert"/>
+
     </changeSet>
 
 </databaseChangeLog>

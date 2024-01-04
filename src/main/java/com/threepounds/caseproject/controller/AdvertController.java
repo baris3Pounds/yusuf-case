@@ -222,7 +222,6 @@ public class AdvertController {
     public ResponseEntity<List<AdvertResource>> searchByDistance(@RequestBody DistanceRequestDto distanceRequest) {
 
         List<AdvertResource> advertResources=advertMapper.entityToAdvertResource(advertService.getAllAdvert());
-//        for (int i=1;i<advertResources.size();i++){
         for (AdvertResource resource : advertResources) {
             double distance = advertService.findDistance(distanceRequest.getLatitude(),
                 resource.getLatitude().doubleValue(), distanceRequest.getLongitude(),
